@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+/* FUENTES DE GOOGLE FONTS */
+/* Bebas Neue */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+/* Bungee Inline */
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Inline&display=swap');
