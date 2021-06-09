@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import SportsMmaRoundedIcon from '@material-ui/icons/SportsMmaRounded';
+import { CartWidget } from './components/CartWidget/CartWidget';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -48,7 +49,7 @@ export default function NavBar() {
                     </Typography>
                     <Button color="inherit" className={classes.buttons}>Login</Button>
                     <Button color="inherit" className={classes.buttons}>Productos</Button>
-                    <Button color="inherit" className={classes.buttons}>Carrito</Button>
+                    <CartWidget />
                 </Toolbar>
             </AppBar>
         </div>
