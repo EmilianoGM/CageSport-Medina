@@ -1,6 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import { ItemCount } from '../ItemCount/ItemCount';
+import { makeStyles } from '@material-ui/core/styles';
 import { ItemList } from '../ItemList/ItemList';
+
+const useStyles = makeStyles({
+    tituloList:{
+        fontFamily: "Coda",
+        textAlign: "center",
+        fontWeight: "bold",
+        color: "#8D0A0A"
+    }
+});
 
 /*
 <ItemCount stock={3} initial={0}  ></ItemCount>
@@ -31,6 +40,7 @@ const espera = new Promise((resolve, reject) => {
 })
 
 export const ItemListContainer = () => {
+    const classes = useStyles();
     const [itemsAMostrar, setItemsAMostrar] = useState([]);
     
     const getData = () => {
@@ -42,7 +52,7 @@ export const ItemListContainer = () => {
 
     return (
         <div>
-            <h1>CAGE SPORTS HOME</h1>
+            <h1 className={classes.tituloList} >LISTA DE PRODUCTOS</h1>
             <ItemList items={itemsAMostrar}></ItemList>
         </div>
     );

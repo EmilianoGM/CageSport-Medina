@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import { CardContent, Typography } from '@material-ui/core';
+import { Card, CardMedia, CardContent } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
@@ -13,8 +11,12 @@ const useStyles = makeStyles({
         justifyContent: "center",
         textAlign: "center"
     },
+    cardContainer: {
+        display:"flex",
+        justifyContent: "center"
+    },
     card: {
-      maxWidth: 300,
+      maxWidth: 400,
       margin: 10
     },
     media: {
@@ -48,31 +50,34 @@ const useStyles = makeStyles({
         }
     }
   });
+
 export const Item = ( {item} ) => {
     const classes = useStyles();
     const { titulo, precio, imagenUrl} = item;
     return(
         <Grid className={classes.gridItem} item xs={12} sm={6} md={4}>
-            <Card className={classes.card}>
-                <CardMedia
-                    className={classes.media}
-                    image={imagenUrl}
-                    title={titulo}
-                />
-                <CardContent>
-                    <Grid container spacing={3}>
-                        <Grid className={classes.celda} item xs={12} sm={6}>
-                            <h2>{titulo}</h2>
+            <div className={classes.cardContainer}> 
+                <Card className={classes.card}>
+                    <CardMedia
+                        className={classes.media}
+                        image={imagenUrl}
+                        title={titulo}
+                    />
+                    <CardContent>
+                        <Grid container spacing={3}>
+                            <Grid className={classes.celda} item xs={12} sm={6}>
+                                <h2>{titulo}</h2>
+                            </Grid>
+                            <Grid className={classes.celda} item xs={12} sm={6}>
+                                <h2 className={classes.precio}>$ {precio}</h2>
+                            </Grid>
+                            <Grid className={classes.gridButton} item xs={12}>
+                                <button className={classes.addButton} onClick={() => { console.log("Clickeado") }}>Ver detalle</button>
+                            </Grid>
                         </Grid>
-                        <Grid className={classes.celda} item xs={12} sm={6}>
-                            <h2 className={classes.precio}>$ {precio}</h2>
-                        </Grid>
-                        <Grid className={classes.gridButton} item xs={12}>
-                            <button className={classes.addButton} onClick={()=>{console.log("Clickeado")}}>Ver detalle</button>
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </div>
         </Grid>
         
         
