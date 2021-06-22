@@ -5,15 +5,21 @@ import { DataSimulator } from '../../services/DataSimulator';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './ItemDetailContainerStyle';
 
-const dataSimulator = new DataSimulator();
+const dataSimulator = new DataSimulator(); // Contiene data para propagar en la app
 
+/**
+ * Promesa para simular un pedido al servidor con retraso de 2 segundos.
+ */
 const espera = new Promise((resolve, reject) => {
     setTimeout(() => {
         resolve(dataSimulator.itemsDataArray);
     }, 2000);
 })
 
-
+/**
+ * Pide la data al servidor y la filtra según id recibido por parámetro, para obtener un único item y enviarlo a ItemDetail.
+ * @returns ItemDetail con la información requerida.
+ */
 export const ItemDetailContainer = () => {
     const classes = useStyles();
     const { id } = useParams();
@@ -22,6 +28,9 @@ export const ItemDetailContainer = () => {
     const [mostrarDetalle, setMostrarDetalle] = useState(false);
     const [itemNoEncontrado, setItemNoEncontrado] = useState(false);
 
+    /**
+     * Obtiene la data y la filtra según el id del item.
+     */
     const getItem = () => {
         espera.then(data => {
             const itemAMostrar = data.find(item => item.id === parseInt(id, 10));

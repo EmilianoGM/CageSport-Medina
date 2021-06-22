@@ -5,20 +5,30 @@ import { DataSimulator } from '../../services/DataSimulator';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './ItemListContainerStyle';
 
-const dataSimulator = new DataSimulator();
+const dataSimulator = new DataSimulator();  // Contiene data para propagar en la app
 
+/**
+ * Promesa para simular un pedido al servidor con retraso de 2 segundos.
+ */
 const espera = new Promise((resolve, reject) => {
     setTimeout(() => {
         resolve(dataSimulator.itemsDataArray);
     }, 2000);
 })
 
+/**
+ * Pide la data al servidor, la filtra según categoria recibida por parámetro y la envia a ItemList.
+ * @returns ItemList con spinner de espera y título.
+ */
 export const ItemListContainer = () => {
     const classes = useStyles();
     const [itemsAMostrar, setItemsAMostrar] = useState([]);
     const [dataCargada, setDataCargada] = useState(false);
     const { id } = useParams();
 
+    /**
+     * Obtiene la data y la filtra segun id de categoría
+     */
     const getData = () => {
         espera.then((data) => {
             setDataCargada(true);

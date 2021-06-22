@@ -3,6 +3,11 @@ import {Grid, Card, CardContent } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import useStyles from './ItemStyle';
 
+/**
+ * Muestra información de un item en forma de tarjeta junto con su imagen.
+ * @param {*} param0 Item a mostrar con id, titulo, precio e imagenUrl.
+ * @returns Devuleve el los datos del item agrupados en una Card. 
+ */
 export const Item = ( {item} ) => {
     const classes = useStyles();
     const { id, titulo, precio, imagenUrl} = item;

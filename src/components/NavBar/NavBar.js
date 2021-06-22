@@ -11,6 +11,9 @@ const brandTitle = "Cage Sports";
 const indumentaria = "indumentaria";
 const equipamiento = "equipamiento";
 
+/**
+ * Muestra una barra de navegación al usuario junto con la marca y un CartWidget. 
+ */
 export default function NavBar() {
     const classes = useStyles();
     

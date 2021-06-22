@@ -2,6 +2,11 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import useStyles from './ItemDetailStyle';
 
+/**
+ * Muestra en detalle la información de un item junto con su imagen correspondiente.
+ * @param {*} param0 El item a mostrar con titulo, detalle, precio e imagenUrl.
+ * @returns El producto con la información organizada.
+ */
 export const ItemDetail = ({ item }) => {
     const classes = useStyles();
     const { titulo, detalle, precio, imagenUrl } = item;
