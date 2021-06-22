@@ -1,85 +1,36 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardMedia, CardContent } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-
-const useStyles = makeStyles({
-    gridItem:{
-        alignContent: "center"
-    },
-    gridButton:{
-        justifyContent: "center",
-        textAlign: "center"
-    },
-    cardContainer: {
-        display:"flex",
-        justifyContent: "center"
-    },
-    card: {
-      maxWidth: 400,
-      margin: 10
-    },
-    media: {
-      height: 0,
-      paddingTop: '56.25%', // 16:9,
-      margin: 10
-    },
-    celda:{
-        "& h2": {
-            margin: 0
-        }
-    },
-    precio: {
-        textAlign: "right"
-    },
-    addButton: {
-        borderRadius: 50,
-        fontFamily: "Montserrat",
-        padding: "5px 10px",
-        color: "#C30038",
-        fontSize: "1.2em",
-        border: "2px solid",
-        borderColor: "#C30038",
-        boxShadow: "0px 4px 5px 1px rgb(0 0 0 / 25%)",
-        background: "transparent",
-
-        '&:hover':{
-            background: "#C30038",
-            color: "white",
-            cursor: "pointer"
-        }
-    }
-  });
+import {Grid, Card, CardContent } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import useStyles from './ItemStyle';
 
 export const Item = ( {item} ) => {
     const classes = useStyles();
-    const { titulo, precio, imagenUrl} = item;
+    const { id, titulo, precio, imagenUrl} = item;
+
     return(
         <Grid className={classes.gridItem} item xs={12} sm={6} md={4}>
-            <div className={classes.cardContainer}> 
+            <div className={classes.cardContainer}>
                 <Card className={classes.card}>
-                    <CardMedia
-                        className={classes.media}
-                        image={imagenUrl}
-                        title={titulo}
-                    />
                     <CardContent>
                         <Grid container spacing={3}>
-                            <Grid className={classes.celda} item xs={12} sm={6}>
-                                <h2>{titulo}</h2>
+                            <Grid item xs={12}>
+                                <div className={classes.imgContainer}>
+                                    <img className={classes.imagen} src={imagenUrl} alt={titulo}></img>
+                                </div>
                             </Grid>
                             <Grid className={classes.celda} item xs={12} sm={6}>
-                                <h2 className={classes.precio}>$ {precio}</h2>
+                                {titulo}
+                            </Grid>
+                            <Grid className={classes.celda} item xs={12} sm={6}>
+                                <div className={classes.precio}>${precio}</div>
                             </Grid>
                             <Grid className={classes.gridButton} item xs={12}>
-                                <button className={classes.addButton} onClick={() => { console.log("Clickeado") }}>Ver detalle</button>
+                                <Link className={classes.detalleLink} to={'/item/' + id}>Ver detalle</Link>
                             </Grid>
                         </Grid>
                     </CardContent>
                 </Card>
             </div>
         </Grid>
-        
-        
     );
 }

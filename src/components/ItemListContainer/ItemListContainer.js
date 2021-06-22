@@ -1,59 +1,52 @@
 import React, {useEffect, useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { ItemList } from '../ItemList/ItemList';
+import { useParams } from 'react-router-dom';
+import { DataSimulator } from '../../services/DataSimulator';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import useStyles from './ItemListContainerStyle';
 
-const useStyles = makeStyles({
-    tituloList:{
-        fontFamily: "Coda",
-        textAlign: "center",
-        fontWeight: "bold",
-        color: "#8D0A0A"
-    }
-});
-
-/*
-<ItemCount stock={3} initial={0}  ></ItemCount>
- */
-
-let itemsDePrueba = [
-    {
-        titulo: "Guantes",
-        precio: 1500,
-        imagenUrl: "/imagenes/guantes001.jpg"
-    },
-    {
-        titulo: "Guantes",
-        precio: 1600,
-        imagenUrl: "/imagenes/guantes001.jpg"
-    },
-    {
-        titulo: "Guantes",
-        precio: 2500,
-        imagenUrl: "/imagenes/guantes001.jpg"
-    }
-];
+const dataSimulator = new DataSimulator();
 
 const espera = new Promise((resolve, reject) => {
     setTimeout(() => {
-        resolve(itemsDePrueba);
+        resolve(dataSimulator.itemsDataArray);
     }, 2000);
 })
 
 export const ItemListContainer = () => {
     const classes = useStyles();
     const [itemsAMostrar, setItemsAMostrar] = useState([]);
-    
+    const [dataCargada, setDataCargada] = useState(false);
+    const { id } = useParams();
+
     const getData = () => {
-        espera.then(data => setItemsAMostrar(data));
+        espera.then((data) => {
+            setDataCargada(true);
+            if(id !== undefined && id !== null){
+                setItemsAMostrar(
+                    data.filter(item => item.categoria === id)
+                );
+            } else {
+                setItemsAMostrar(data);
+            }
+            
+        })
     }
-    useEffect(() => {
-        getData();
-    }, []);
+
+    useEffect(getData, [id]);
 
     return (
         <div>
-            <h1 className={classes.tituloList} >LISTA DE PRODUCTOS</h1>
-            <ItemList items={itemsAMostrar}></ItemList>
+            {
+                dataCargada ? <>
+                    <h1  className={classes.tituloList} >
+                        {itemsAMostrar.length !== 0 ? "LISTA DE PRODUCTOS" : "¡Ups! Parece que esa categoría no existe."} 
+                    </h1>
+                    <ItemList items={itemsAMostrar}></ItemList>
+                </> : <div className={classes.spinnerContainer} >
+                    <CircularProgress size={"5rem"} className={classes.spinner} />
+                </div>
+            }
         </div>
     );
 }
