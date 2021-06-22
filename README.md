@@ -1,10 +1,17 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
+# REACT Ecommerce CageSport
+Proyecto realizado para CoderHouse con React y JavaScript.
+- Idea: ecommerce de una tienda de venta de artículos deportivos orientados a las artes marciales mixtas.
+- 22/06/2021 Entrega parcial: Navegación entre categorías con rutas, muestra de items y sus detalles.
+## Dependencias
+- [Material-UI](https://material-ui.com/)
+- [Material-Icons](https://material-ui.com/es/components/material-icons/)
+- [React Router Dom](https://reactrouter.com/web/guides/quick-start)
+## React info / Available Scripts
 
 In the project directory, you can run:
+### `npm install`
+
+Instala las dependencias necesarias para ejecutar el proyecto.
 
 ### `npm start`
 
