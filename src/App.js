@@ -25,6 +25,9 @@ function App() {
         <Route path="/item">
           <Redirect to="/"/>
         </Route>
+        <Route path="/cart">
+          <h1>PROXIMAMENTE...</h1>
+        </Route>
       </Switch>
     </BrowserRouter>
   );
