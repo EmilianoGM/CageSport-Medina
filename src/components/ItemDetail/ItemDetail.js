@@ -13,9 +13,11 @@ export const ItemDetail = ({ item }) => {
     const history = useHistory();
     const { titulo, detalle, precio, imagenUrl } = item;
     const [compraTerminada, setCompraTerminada] = useState(false);
+    const [cantidadItems, setCantidadItems] = useState(0);
 
     const agregar = (cantidad) => {
-        console.log("CANTIDAD: ", cantidad); //linea de prueba, recibe la cantidad de items seleccionada por el usuario
+        setCantidadItems(cantidad);
+        console.log("CANTIDAD: ", cantidadItems); //linea de prueba, recibe la cantidad de items seleccionada por el usuario
         setCompraTerminada(true);
     };
 
