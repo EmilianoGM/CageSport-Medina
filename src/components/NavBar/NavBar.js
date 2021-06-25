@@ -24,8 +24,8 @@ export default function NavBar() {
                     <Typography variant="h6" className={classes.brandTitle}>
                         <Link className={classes.title} to={'/'}><SportsMmaRoundedIcon/>{brandTitle}</Link>
                     </Typography>
-                    <NavLink activeClassName={classes.activeCustomLink} className={classes.customLink} to={'/category/' + equipamiento}>Equipamiento</NavLink>
-                    <NavLink activeClassName={classes.activeCustomLink} className={classes.customLink} to={'/category/' + indumentaria}>Indumentaria</NavLink>
+                    <NavLink activeClassName={classes.activeCustomLink} className={classes.customLink} to={`/category/${equipamiento}`}>Equipamiento</NavLink>
+                    <NavLink activeClassName={classes.activeCustomLink} className={classes.customLink} to={`/category/${indumentaria}`}>Indumentaria</NavLink>
                     <CartWidget />
                 </Toolbar>
             </AppBar>

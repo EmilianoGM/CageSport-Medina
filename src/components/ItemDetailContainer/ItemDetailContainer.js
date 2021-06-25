@@ -20,7 +20,7 @@ const espera = new Promise((resolve, reject) => {
  * Pide la data al servidor y la filtra según id recibido por parámetro, para obtener un único item y enviarlo a ItemDetail.
  * @returns ItemDetail con la información requerida.
  */
-export const ItemDetailContainer = () => {
+export const ItemDetailContainer = props => {
     const classes = useStyles();
     const { id } = useParams();
 

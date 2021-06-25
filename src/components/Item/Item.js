@@ -30,7 +30,7 @@ export const Item = ( {item} ) => {
                                 <div className={classes.precio}>${precio}</div>
                             </Grid>
                             <Grid className={classes.gridButton} item xs={12}>
-                                <Link className={classes.detalleLink} to={'/item/' + id}>Ver detalle</Link>
+                                <Link className={classes.detalleLink} to={`/item/${id}`}>Ver detalle</Link>
                             </Grid>
                         </Grid>
                     </CardContent>

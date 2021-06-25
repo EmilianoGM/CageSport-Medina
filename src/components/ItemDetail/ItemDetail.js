@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import { CartContext } from '../CartContext/CartContext';
 import {Grid, Button} from '@material-ui/core';
 import useStyles from './ItemDetailStyle';
 import { ItemCount } from '../ItemCount/ItemCount';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
+
 /**
  * Muestra en detalle la información de un item junto con su imagen correspondiente.
  * @param {*} param0 El item a mostrar con titulo, detalle, precio e imagenUrl.
@@ -11,17 +13,36 @@ import { useHistory } from 'react-router-dom'
 export const ItemDetail = ({ item }) => {
     const classes = useStyles();
     const history = useHistory();
-    const { titulo, detalle, precio, imagenUrl } = item;
+    const { addItem, modifyQuantity } = useContext(CartContext);
+    const { id, titulo, detalle, precio, imagenUrl } = item;
+    const [cantidad, setCantidad] = useState(0);
     const [compraTerminada, setCompraTerminada] = useState(false);
-    const [cantidadItems, setCantidadItems] = useState(0);
+    
+    /**
+     * Cancela el agregado del item, remueve su cantidad del array de compra y muestra nuevamente el ItemCount.
+     */
+    const cancelar = () => {
+        modifyQuantity(id, -cantidad);
+        setCantidad(0);
+        setCompraTerminada(false);
+    }
 
-    const agregar = (cantidad) => {
-        setCantidadItems(cantidad);
-        console.log("CANTIDAD: ", cantidadItems); //linea de prueba, recibe la cantidad de items seleccionada por el usuario
+    /**
+     * Agrega un item al array de compra y oculta el ItemCount.
+     * @param {*} cantidadItem Cantidad a agregar.
+     */
+    const agregar = (cantidadItem) => {
+        setCantidad(cantidadItem);
+        addItem(item, cantidadItem);
+        //console.log("CANTIDAD: ", cantidadItems); //linea de prueba, recibe la cantidad de items seleccionada por el usuario
         setCompraTerminada(true);
     };
 
+    /**
+     * Redirecciona a cart.
+     */
     const redireccionar = () =>{
+        setCantidad(0);
         history.push("/cart");
     }
 
@@ -42,7 +63,7 @@ export const ItemDetail = ({ item }) => {
     
                     {compraTerminada ? <div className={classes.botonera} >
                             <Button className={classes.buttonTerminar} onClick={() => {redireccionar()}}> Terminar compra </Button>
-                            <Button className={classes.buttonCancelar} onClick={() => {setCompraTerminada(false)}}>Cancelar</Button>
+                            <Button className={classes.buttonCancelar} onClick={() => {cancelar()}}>Cancelar</Button>
                         </div> : <ItemCount stock={3} initial={0} onAdd={agregar}></ItemCount>
                     }
                 </div>
