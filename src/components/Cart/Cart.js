@@ -39,9 +39,8 @@ export const Cart = props => {
                         <div className={classes.bottomLine}></div>
                         {itemsCompraArray.map((element, i) => {
                             return (
-                                <>
-                                <Grid item xs={12} key={i} >
-                                    <div className={classes.itemDetalle} key={i}>
+                                <Grid item xs={12} key={i}>
+                                    <div className={classes.itemDetalle}>
                                         <img className={classes.imagen} src={element.item.imagenUrl} alt={element.item.titulo}></img>
                                         <div className={classes.celdaGrid}>
                                             <p className={classes.fontBolder}>{element.item.titulo}</p>
@@ -50,16 +49,15 @@ export const Cart = props => {
                                                 <p>Cantidad: {element.quantity}</p>
                                             </div>
                                         </div>
-                                        <div className={classes.celdaGrid + " " + classes.celdaDerecha + " " + classes.alinearDerecha }>
+                                        <div className={classes.celdaGrid + " " + classes.celdaDerecha + " " + classes.alinearDerecha}>
                                             <p>${element.item.precio * element.quantity}</p>
                                             <Button className={classes.deleteButton} onClick={() => { removerItem(element.item.id) }}>
                                                 Eliminar<BackspaceIcon className={classes.backIcon} />
                                             </Button>
                                         </div>
                                     </div>
+                                    <div className={classes.bottomLine}></div>
                                 </Grid>
-                                <div className={classes.bottomLine}></div>
-                                </>
                             );
                         })}
                         <Grid className={classes.precioTotal} item xs={6}>
