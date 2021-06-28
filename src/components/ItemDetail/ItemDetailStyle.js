@@ -4,15 +4,16 @@ const useStyles = makeStyles({
     contentContainer:{
         padding: "5px",
         maxWidth: 400,
+        color: "white"
     },
     titleContainer:{
-        backgroundColor: "black"
+        backgroundColor: "white"
     },
     titulo:{
         margin: 0,
         marginTop: 10,
         textAlign: "center",
-        color: "white",
+        color: "#8F0B0B",
         fontSize: "2em",
         fontFamily: "Coda",
     },
@@ -21,7 +22,7 @@ const useStyles = makeStyles({
         fontWeight: "bolder",
         fontSize: "1.5em",
         textAlign: "center",
-        border: "2px solid black"
+        border: "2px solid white"
     },
     detalle: {
         fontSize: "1.5em",

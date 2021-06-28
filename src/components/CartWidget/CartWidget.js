@@ -1,32 +1,55 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Badge from '@material-ui/core/Badge';
+import { CartContext } from '../../contexts/CartContext/CartContext';
+import { useHistory } from 'react-router-dom';
+import {Button, Badge} from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const useStyles = makeStyles((theme) => ({
     buttons: {
         color: "white",
-        //backgroundColor: "white",
         fontFamily: 'Bebas Neue',
         fontSize: "1.1em",
         '&:hover': {
             backgroundColor: 'white',
             color: 'red',
         },
-        //marginLeft: "5px"
     }
 }));
 
 export const CartWidget = () => {
     const classes = useStyles();
+    const history = useHistory();
+    const { itemsCompraArray } = useContext(CartContext);
+    const [cantidadDeItems, setCantidadDeItems] = useState(0);
+
+    /**
+     * Redirecciona a cart.
+     */
+     const redireccionar = () =>{
+        history.push("/cart");
+    }
+
+    const calcularCantidadTotal = () => {
+        let cantidadTotal = 0;
+        itemsCompraArray.forEach((element) => {
+            cantidadTotal += element.quantity;
+        });
+        setCantidadDeItems(cantidadTotal);
+    }
+
+    useEffect(calcularCantidadTotal, [itemsCompraArray]);
 
     return(
-    <>
-        <Button className={classes.buttons}>
-            <Badge badgeContent={4} color="secondary">
-                <ShoppingCartIcon color="inherit" />
-            </Badge>
-        </Button>
-    </>);
+        <>
+        {
+            itemsCompraArray.length !== 0 ? 
+            <Button className={classes.buttons} onClick={() => {redireccionar()}} >
+                <Badge badgeContent={cantidadDeItems} color="secondary">
+                    <ShoppingCartIcon color="inherit" />
+                </Badge>
+            </Button> : <></>
+        }
+        </>
+    );
 }

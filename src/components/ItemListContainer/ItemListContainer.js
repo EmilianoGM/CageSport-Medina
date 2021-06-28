@@ -49,7 +49,7 @@ export const ItemListContainer = () => {
         <div>
             {
                 dataCargada ? <>
-                    <h1  className={classes.tituloList} >
+                    <h1 className="tituloList puff-in-center" >
                         {itemsAMostrar.length !== 0 ? "LISTA DE PRODUCTOS" : "¡Ups! Parece que esa categoría no existe."} 
                     </h1>
                     <ItemList items={itemsAMostrar}></ItemList>

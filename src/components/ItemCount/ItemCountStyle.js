@@ -10,7 +10,8 @@ const useStyles = makeStyles((theme) => ({
         border: "4px solid #888888",
         borderRadius: "10px",
         backgroundColor: "#f4f5f6",
-        margin: "5px 0px"
+        margin: "5px 0px",
+        color: "black"
     },
     buttonCustomizado: {
         marginBottom: 5,

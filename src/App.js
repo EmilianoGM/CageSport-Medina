@@ -4,13 +4,14 @@ import NavBar from './components/NavBar/NavBar';
 import { ItemListContainer } from './components/ItemListContainer/ItemListContainer';
 import { ItemDetailContainer } from './components/ItemDetailContainer/ItemDetailContainer';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { CartComponentContext } from './components/CartContext/CartContext';
+import { CartComponentContext } from './contexts/CartContext/CartContext';
+import { Cart } from './components/Cart/Cart';
 
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
       <CartComponentContext>
+        <NavBar />
         <Switch>
           <Route exact path="/">
             <ItemListContainer />
@@ -28,7 +29,7 @@ function App() {
             <Redirect to="/" />
           </Route>
           <Route path="/cart">
-            <h1>PROXIMAMENTE...</h1>
+            <Cart />
           </Route>
         </Switch>
       </CartComponentContext>

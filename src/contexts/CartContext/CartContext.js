@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, {createContext, useState } from 'react';
 
 export const CartContext = createContext();
 
@@ -73,12 +73,8 @@ export const CartComponentContext = props => {
     const clearCart = () => {
         setItemsCompraArray([]);
     }
-
-    useEffect(() => {
-        console.log("Array de compra: ", itemsCompraArray);
-    });
-
-    return <CartContext.Provider value={{ addItem, modifyQuantity, removeItemById, removeItemByIndex, clearCart }}>
+    
+    return <CartContext.Provider value={{ itemsCompraArray, addItem, modifyQuantity, removeItemById, removeItemByIndex, clearCart }}>
         {props.children}
     </CartContext.Provider>
 }

@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import { CartContext } from '../CartContext/CartContext';
+import { CartContext } from '../../contexts/CartContext/CartContext';
 import {Grid, Button} from '@material-ui/core';
 import useStyles from './ItemDetailStyle';
 import { ItemCount } from '../ItemCount/ItemCount';
@@ -64,7 +64,7 @@ export const ItemDetail = ({ item }) => {
                     {compraTerminada ? <div className={classes.botonera} >
                             <Button className={classes.buttonTerminar} onClick={() => {redireccionar()}}> Terminar compra </Button>
                             <Button className={classes.buttonCancelar} onClick={() => {cancelar()}}>Cancelar</Button>
-                        </div> : <ItemCount stock={3} initial={0} onAdd={agregar}></ItemCount>
+                        </div> : <ItemCount stock={item.stock} initial={0} onAdd={agregar}></ItemCount>
                     }
                 </div>
             </Grid>
