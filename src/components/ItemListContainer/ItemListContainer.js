@@ -1,20 +1,10 @@
 import React, {useEffect, useState} from 'react';
+import { getProductos } from '../../services/CloudFirestoreService';
 import { ItemList } from '../ItemList/ItemList';
 import { useParams } from 'react-router-dom';
-import { DataSimulator } from '../../services/DataSimulator';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './ItemListContainerStyle';
 
-const dataSimulator = new DataSimulator();  // Contiene data para propagar en la app
-
-/**
- * Promesa para simular un pedido al servidor con retraso de 2 segundos.
- */
-const espera = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve(dataSimulator.itemsDataArray);
-    }, 2000);
-})
 
 /**
  * Pide la data al servidor, la filtra según categoria recibida por parámetro y la envia a ItemList.
@@ -27,20 +17,21 @@ export const ItemListContainer = () => {
     const { id } = useParams();
 
     /**
-     * Obtiene la data y la filtra segun id de categoría
+     * Obtiene la data desde firebase segun id de categoría.
      */
     const getData = () => {
-        espera.then((data) => {
+        setDataCargada(false);
+        getProductos(id).then((querySnapshot) => {
+            let arrayData = [];
+            querySnapshot.forEach((doc) => {
+                arrayData.push({id: doc.id, ...doc.data()});
+            });
+            setItemsAMostrar(arrayData);
+        }).catch((error) => {
+            console.log("ERROR:", error);
+        }).finally(() => {
             setDataCargada(true);
-            if(id !== undefined && id !== null){
-                setItemsAMostrar(
-                    data.filter(item => item.categoria === id)
-                );
-            } else {
-                setItemsAMostrar(data);
-            }
-            
-        })
+        });
     }
 
     useEffect(getData, [id]);

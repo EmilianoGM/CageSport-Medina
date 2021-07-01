@@ -25,13 +25,16 @@ const useStyles = makeStyles({
     },
     imgContainer:{
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
+        minWidth: "20px",
+        minHeight: "20px",
+        background: "transparent url('/loadingImage.gif') center no-repeat"
     },
     imagen: {
         maxWidth: 380,
         maxHeight: 200,
         height: "auto",
-        width: "auto"
+        width: "auto",
     },
     celda:{
         fontSize: "1.3em",

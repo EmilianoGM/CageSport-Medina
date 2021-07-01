@@ -27,7 +27,7 @@ export const Cart = props => {
         <>
             {
                 itemsCompraArray.length !== 0 ? 
-                <div className={classes.cageContainer2}>
+                <div className={classes.cageContainer}>
                     <h1 className="tituloList puff-in-center"> Carrito de compra </h1>
                     <Grid className={classes.detalleCompra + " slide-in-left"} container direction="row" justify="flex-start" alignItems="flex-start">
                         <Grid className={classes.subtitulo} item xs={6}>

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 export const CartWidget = () => {
     const classes = useStyles();
     const history = useHistory();
-    const { itemsCompraArray } = useContext(CartContext);
+    const { itemsCompraArray, getTotalQuantity } = useContext(CartContext);
     const [cantidadDeItems, setCantidadDeItems] = useState(0);
 
     /**
@@ -30,15 +30,10 @@ export const CartWidget = () => {
         history.push("/cart");
     }
 
-    const calcularCantidadTotal = () => {
-        let cantidadTotal = 0;
-        itemsCompraArray.forEach((element) => {
-            cantidadTotal += element.quantity;
-        });
+    useEffect(() => {
+        const cantidadTotal = getTotalQuantity();
         setCantidadDeItems(cantidadTotal);
-    }
-
-    useEffect(calcularCantidadTotal, [itemsCompraArray]);
+    }, [itemsCompraArray, getTotalQuantity]);
 
     return(
         <>

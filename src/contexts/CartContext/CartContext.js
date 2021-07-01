@@ -1,9 +1,32 @@
-import React, {createContext, useState } from 'react';
+import React, {createContext, useState, useEffect } from 'react';
 
 export const CartContext = createContext();
 
 export const CartComponentContext = props => {
     const [itemsCompraArray, setItemsCompraArray] = useState([]); //Array de items en el carrito de compra.
+
+    /**
+     * Comprueba la data de Session Storage y de existir la asigna al array de compra.
+     */
+    const setArrayDataFromSession = () => {
+        const stringJsonData = sessionStorage.getItem("cartData");
+        let arrayData = [];
+        if(stringJsonData){
+            arrayData = JSON.parse(stringJsonData);
+            if(arrayData.length !== 0){
+                setItemsCompraArray(arrayData);
+            } 
+        }
+    }
+
+    /**
+     * Guarda los datos del array de compra en Session Storage, en formato JSON.
+     */
+    const setSessionStorage = () => {
+        //sessionStorage.clear();
+        const arrayDataString = JSON.stringify(itemsCompraArray);
+        sessionStorage.setItem("cartData", arrayDataString);
+    }
 
     /**
      * Agrega un item al array de compra, si ya se encuentra suma la cantidad al mismo.
@@ -73,8 +96,23 @@ export const CartComponentContext = props => {
     const clearCart = () => {
         setItemsCompraArray([]);
     }
-    
-    return <CartContext.Provider value={{ itemsCompraArray, addItem, modifyQuantity, removeItemById, removeItemByIndex, clearCart }}>
+
+    /**
+     * Suma la cantidad total de items pedidos en el array de compra.
+     * @returns La cantidad total (number)
+     */
+    const getTotalQuantity = () => {
+        let cantidadTotal = 0;
+        itemsCompraArray.forEach((element) => {
+            cantidadTotal += element.quantity;
+        });
+        return cantidadTotal;
+    }
+
+    useEffect(setArrayDataFromSession, []);
+    useEffect(setSessionStorage, [itemsCompraArray]);
+
+    return <CartContext.Provider value={{ itemsCompraArray, addItem, modifyQuantity, removeItemById, removeItemByIndex, clearCart, getTotalQuantity}}>
         {props.children}
     </CartContext.Provider>
 }
