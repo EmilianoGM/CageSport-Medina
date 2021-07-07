@@ -1,5 +1,6 @@
 import { database } from "./Firebase";
 const productosCollection = database.collection("productos");
+const ordersCollection = database.collection("orders");
 
 /**
  * Devuelve una promise con la data de productos de firebase filtrada segun categoria, en tipo QuerySnapshot<firebase.firestore.DocumentData>.
@@ -21,4 +22,12 @@ export const getProductos = (categoryId) => {
  */
 export const getProductoById = (id) => {
     return productosCollection.doc(id).get();
+}
+
+/**
+ * Devuelve una promesa para agregar un nuevo documento a la coleccion de ordenes.
+ * @param {*} order Orden de compra
+ */
+export const addOrderDocument = (order) => {
+    return ordersCollection.add(order);
 }

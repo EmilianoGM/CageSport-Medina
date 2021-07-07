@@ -35,10 +35,9 @@ export const CartComponentContext = props => {
      */
     const addItem = (item, quantity) => {
         if(isInCart(item.id)){
-            modifyQuantity(item.id, quantity);
-        } else {
-            setItemsCompraArray(itemsCompraArray => [...itemsCompraArray, {item: item, quantity: quantity}]);
+            removeItemById(item.id);
         }
+        setItemsCompraArray(itemsCompraArray => [...itemsCompraArray, {item: item, quantity: quantity}]);
     }
 
     /**
@@ -73,11 +72,9 @@ export const CartComponentContext = props => {
      * @param {*} itemId Id del item a remover.
      */
     const removeItemById = (itemId) => {
-        if(isInCart(itemId)){
-            let arrayABuscar = [...itemsCompraArray];
-            let index = arrayABuscar.findIndex(element => element.item.id === itemId);
-            removeItemByIndex(index);
-        }
+        let arrayABuscar = [...itemsCompraArray];
+        let index = arrayABuscar.findIndex(element => element.item.id === itemId);
+        removeItemByIndex(index);
     }
     
     /**
@@ -108,8 +105,6 @@ export const CartComponentContext = props => {
         });
         return cantidadTotal;
     }
-
-    
 
     useEffect(setArrayDataFromSession, []);
     useEffect(setSessionStorage, [itemsCompraArray]);

@@ -6,6 +6,7 @@ import {Dialog, DialogTitle, DialogContent} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {Order} from '../Order/Order';
+import { addOrderDocument } from '../../services/CloudFirestoreService';
 
 const useStyles = makeStyles((theme) => ({
     customDialog:{
@@ -37,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
 
 
 export const CustomDialog = props => {
-    
+    const { totalPrice } = props;
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const { itemsCompraArray, removeItemById, clearCart } = useContext(CartContext);
+    const { itemsCompraArray, clearCart } = useContext(CartContext);
     
     const handleClickOpen = () => {
         setOpen(true);
@@ -49,7 +50,44 @@ export const CustomDialog = props => {
     const handleClose = () => {
         setOpen(false);
     };
+
+    /*
+    {item: id, titulo, detalle, precio, imagenUrl }
+     */
+    const generateOrder = (buyer) => {
+        let date = new Date();
+        let newItemsArray = [];
+        itemsCompraArray.forEach(element => {
+            let data = {
+                id: element.item.id,
+                title: element.item.titulo,
+                price: element.item.precio,
+                quantity: element.quantity
+            }
+            newItemsArray.push(data);
+        });
+        const newOrder = {
+            buyer: buyer,
+            items: newItemsArray,
+            date: date,
+            total: totalPrice
+        }
+        return newOrder;
+    }
     
+    const addNewOrder = (buyer) => {
+        const newOrder = generateOrder(buyer);
+        try{
+            addOrderDocument(newOrder).then((docRef) => {
+                console.log("Document written with ID: ", docRef.id);
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+        } catch(error) {
+            console.log("Firebase add doc error:", error);
+        }
+    }
     /*
     const handleBlur = e => {
         const { name, value } = e.target;
@@ -78,7 +116,7 @@ export const CustomDialog = props => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <Order closed={open} handleClose={handleClose}/>
+                    <Order addOrder={addNewOrder} totalPrice={totalPrice} handleClose={handleClose}/>
                 </DialogContent>
             </Dialog>
         </div>

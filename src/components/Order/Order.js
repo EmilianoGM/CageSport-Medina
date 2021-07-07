@@ -77,7 +77,7 @@ const validationMessages = {
 }
 
 export const Order = props => {
-    const { closed, handleClose } = props;
+    const { closed, handleClose, addNewOrder, totalPrice} = props;
     const classes = useStyles();
     const [errors, setErrors] = useState(errorInitialState);
     const [ordenForm, setOrdenForm] = useState(ordenInitialState);
@@ -120,18 +120,19 @@ export const Order = props => {
         }
         if(formValidation){
             console.log("suceso");
-            addNewOrder();
+            addNewOrder(ordenForm);
             handleClose();
         } else {
             console.log("error");
         }
     }
 
+    /*
     const addNewOrder = () => {
         const date = new Date();
         let newOrder = {...ordenForm, date: date};
         console.log("Orden:", newOrder);
-    }
+    }*/
 
     useEffect(() => {
         if(closed){
@@ -164,7 +165,7 @@ export const Order = props => {
             </div> : <></>}
             <Grid className={classes.actionsContainer} container direction="row" alignItems="stretch">
                 <Grid className={classes.totalContainer} item xs={6}>
-                    <div className={classes.total}> Total: ${props.total}</div>
+                    <div className={classes.total}> Total: ${totalPrice}</div>
                 </Grid>
                 <Grid className={classes.submitContainer} item xs={6}>
                     <Button type='submit' className={classes.submmitButton}>
