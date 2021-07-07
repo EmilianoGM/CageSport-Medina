@@ -109,6 +109,8 @@ export const CartComponentContext = props => {
         return cantidadTotal;
     }
 
+    
+
     useEffect(setArrayDataFromSession, []);
     useEffect(setSessionStorage, [itemsCompraArray]);
 

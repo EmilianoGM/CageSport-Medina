@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './ItemListContainerStyle';
 
-
 /**
  * Pide la data al servidor, la filtra según categoria recibida por parámetro y la envia a ItemList.
  * @returns ItemList con spinner de espera y título.
@@ -13,12 +12,13 @@ import useStyles from './ItemListContainerStyle';
 export const ItemListContainer = () => {
     const classes = useStyles();
     const [itemsAMostrar, setItemsAMostrar] = useState([]);
-    const [dataCargada, setDataCargada] = useState(false);
+    const [dataCargada, setDataCargada] = useState(true);
     const { id } = useParams();
 
     /**
      * Obtiene la data desde firebase segun id de categoría.
      */
+    
     const getData = () => {
         setDataCargada(false);
         getProductos(id).then((querySnapshot) => {
