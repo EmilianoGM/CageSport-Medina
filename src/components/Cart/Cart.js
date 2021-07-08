@@ -4,11 +4,13 @@ import {Grid, Button} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext/CartContext';
 import BackspaceIcon from '@material-ui/icons/Backspace';
-import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
+import { Order } from '../Order/Order';
 
 export const Cart = props => {
     const classes = useStyles();
     const [precioTotal, setPrecioTotal] = useState(0);
+    const [lastOrderId, setLastOrderId] = useState();
+    const [showOrderId, setShowOrderId] = useState(false);
     const { itemsCompraArray, removeItemById, clearCart } = useContext(CartContext);
     const removerItem = (id) => {
         removeItemById(id);
@@ -20,6 +22,11 @@ export const Cart = props => {
             nuevoPrecioTotal += element.item.precio * element.quantity;
         });
         setPrecioTotal(nuevoPrecioTotal);
+    }
+
+    const setNewOrderId = (id) => {
+        setLastOrderId(id);
+        setShowOrderId(true);
     }
     
     useEffect(calcularPrecioTotal, [itemsCompraArray]);
@@ -73,14 +80,13 @@ export const Cart = props => {
                         </Button>
                     </div>
                     <div className={classes.buttonsContainer}>
-                        <Button className={classes.pagarButton + " scale-in-hor-left"}>
-                            Ir a pagar <AccountBalanceWalletOutlinedIcon className={classes.arrowIcon} /> 
-                        </Button>
+                        <Order totalPrice={precioTotal} addOrderId={setNewOrderId}/>
                     </div>
                 </div>
                 : <div className={classes.sinItemsContainer}>
                     <h1 className="tituloList puff-in-center" >No hay items por el momento en el carrito</h1>
                     <Link className={classes.continuarLink} to={'/'}>Continuar comprando</Link>
+                    { showOrderId ? <h1 className="tituloList"> Ultima orden de compra: {lastOrderId}.</h1> : <></> }
                 </div>
 
             }

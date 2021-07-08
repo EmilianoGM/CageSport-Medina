@@ -6,7 +6,7 @@ import { ItemDetailContainer } from './components/ItemDetailContainer/ItemDetail
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { CartComponentContext } from './contexts/CartContext/CartContext';
 import { Cart } from './components/Cart/Cart';
-import { CustomDialog } from './components/CustomDialog/CustomDialog';
+
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <NavBar />
         <Switch>
           <Route exact path="/">
-            <CustomDialog total={23456}/>
+            <ItemListContainer />
           </Route>
           <Route path="/category/:id">
             <ItemListContainer />

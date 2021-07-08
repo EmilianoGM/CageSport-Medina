@@ -1,4 +1,4 @@
-import { database } from "./Firebase";
+import { database, docIdFieldPath } from "./Firebase";
 const productosCollection = database.collection("productos");
 const ordersCollection = database.collection("orders");
 
@@ -31,3 +31,10 @@ export const getProductoById = (id) => {
 export const addOrderDocument = (order) => {
     return ordersCollection.add(order);
 }
+
+export const getProductosByCartArray = (items) => {
+    return productosCollection.where(docIdFieldPath, 'in', items.map(i => i.item.id)).get();
+}
+
+export const batch = () => { return database.batch()};
+

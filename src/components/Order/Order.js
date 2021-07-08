@@ -1,178 +1,182 @@
-import React, {useState, useEffect} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {Grid, Button} from '@material-ui/core';
+import React, {useState, useContext} from 'react';
+//Contextos
+import { CartContext } from '../../contexts/CartContext/CartContext';
+//Servicios
+import { addOrderDocument, batch, getProductosByCartArray } from '../../services/CloudFirestoreService';
+//Componentes
+import { BuyerForm } from './BuyerForm/BuyerForm';
+//Material
+import {Dialog, DialogTitle, DialogContent, Button, IconButton, CircularProgress} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
+//Estilos
+import useStyles from './OrderStyle';
 
-import TextField from '@material-ui/core/TextField';
-
-const useStyles = makeStyles((theme) => ({
-    customForm: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    errorMessage: {
-        textAlign: 'center',
-        fontSize: '0.6em',
-        color: 'red'
-    },
-    customInput:{
-        width: '100%'
-    },
-    actionsContainer: {
-        marginTop: '10px'
-    },
-    totalContainer: {
-        display: 'flex',
-    },
-    total: {
-        fontSize: "1.5em",
-        fontFamily: "Bebas Neue",
-        margin: 'auto 0px'
-    },
-    submitContainer: {
-        textAlign: "right"
-    },
-    submmitButton: {
-        fontSize: "1.2em",
-        backgroundColor: "white",
-        padding: 5,
-        fontFamily: "Bebas Neue",
-        border: "5px solid #95273D",
-        '&:hover': {
-            borderColor: "white",
-            color: "white",
-            backgroundColor: "#FF5F5F"
-        }
-    },
-}));
-
-const ordenInitialState = {
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: ''
-}
-
-const errorInitialState = {
-    firstName: false,
-    lastName: false,
-    phone: false,
-    email: false,
-    emailConfirmation: false
-}
-
-const validationsRegEx = {
-    firstName: /^[a-zA-ZáéíóúÁÉÍÓÚ][a-zA-ZáéíóúÁÉÍÓÚ \s]*$/,
-    lastName: /^[a-zA-ZáéíóúÁÉÍÓÚ][a-zA-ZáéíóúÁÉÍÓÚ \s]*$/,
-    phone: /^[0-9]{8,11}$/,
-    email: /^[^\s@]+@[^\s@]+$/
-}
-
-const validationMessages = {
-    firstName: 'El nombre solo puede contener letras y apostrofes.',
-    lastName: 'El apellido solo puede contener letras y apostrofes.',
-    phone: 'Solo admite números sin guiones. Minimo 8 caracteres, Máximo 11.',
-    email: 'Debe tener formato de correo / email',
-}
-
+/**
+ * 
+ * @param {*} props 
+ * @returns 
+ */
 export const Order = props => {
-    const { closed, handleClose, addNewOrder, totalPrice} = props;
     const classes = useStyles();
-    const [errors, setErrors] = useState(errorInitialState);
-    const [ordenForm, setOrdenForm] = useState(ordenInitialState);
+    //Pros - Context
+    const { totalPrice, addOrderId} = props;
+    const { itemsCompraArray, clearCart } = useContext(CartContext);
+    //Flags
+    const [openOrderDialog, setOpenOrderDialog] = useState(false);
+    const [showSpinner, setShowSpinner] = useState(false);
+    const [showForm, setShowForm] = useState(true);
+    const [orderFinished, setOrderFinished] = useState(false);
+    const [orderError, setOrderError] = useState(false);
+    //Data
+    const [outOfStockArray, setOutOfStockArray] = useState([]);
+    const [orderId, setOrderId] = useState();
 
-    const handleChange = e => {
-        //console.log("Evento change:", e);
-        const { name, value } = e.target;
-        const regExp = validationsRegEx[name];
-        if(!regExp.test(value)){
-            setErrors({...errors, [name]: true});
-        } else {
-            setErrors({...errors, [name]: false});
-            setOrdenForm({
-                ...ordenForm,
-                [name]: value
-            });        
+    /**
+     * Maneja la apertura de la ventana de dialogo;
+     */
+    const handleOpenOrder = () => {
+        setOpenOrderDialog(true);
+    };
+    /**
+     * Maneja el cierre de la ventana de dialogo.
+     */
+    const handleCloseOrder = () => {
+        if(orderFinished && !orderError){
+            clearCart();    
         }
-    }
+        setOpenOrderDialog(false);
+        setShowForm(true);
+        setOrderFinished(false);
+        setOrderError(false);
+        setShowSpinner(false);
+        setOutOfStockArray([]);
+        setOrderId();
+    };
 
-    const handleChangeEmailConfirmation = e => {
-        const { name, value } = e.target;
-        if(ordenForm['email'].localeCompare(value) !== 0){
-            setErrors({...errors, [name]: true});
-        } else {
-            setErrors({...errors, [name]: false});
-        }
-    }
-
-    const submitOrder = e => {
-        console.log("Evento form:", e);
-        e.preventDefault();
-        //props.addOrden(ordenForm);
-        let formValidation = true;
-        for(const prop in ordenForm){
-            let regExp = validationsRegEx[prop];
-            if(!regExp.test(ordenForm[prop])){
-                formValidation = false;
-                break;
-            }
-        }
-        if(formValidation){
-            console.log("suceso");
-            addNewOrder(ordenForm);
-            handleClose();
-        } else {
-            console.log("error");
-        }
-    }
-
-    /*
-    const addNewOrder = () => {
+    /**
+     * Genera una nueva orden con datos del comprador, fecha y los items elegidos en el carrito de compra.
+     * @param {*} buyer Datos del comprador con firstName, lastName, email, phone.
+     * @returns La orden generada con keys buyer,items,date y total.
+     */
+    const generateOrder = (buyer) => {
         const date = new Date();
-        let newOrder = {...ordenForm, date: date};
-        console.log("Orden:", newOrder);
-    }*/
-
-    useEffect(() => {
-        if(closed){
-            setErrors(errorInitialState);
-            setOrdenForm(ordenInitialState);
+        let newItemsArray = [];
+        itemsCompraArray.forEach(element => {
+            let data = {
+                id: element.item.id,
+                title: element.item.titulo,
+                price: element.item.precio,
+                quantity: element.quantity
+            }
+            newItemsArray.push(data);
+        });
+        const newOrder = {
+            buyer: buyer,
+            items: newItemsArray,
+            date: date,
+            total: totalPrice
         }
-    }, [closed]);
+        return newOrder;
+    }
+    /**
+     * Agrega una nueva orden a la base de datos de firebase.
+     * @param {*} buyer Datos del comprador con firstName, lastName, email, phone.
+     */
+    const addNewOrder = (buyer) => {
+        const newOrder = generateOrder(buyer);
+        try{
+            addOrderDocument(newOrder).then((docRef) => {
+                console.log("Document written with ID: ", docRef.id);
+                setOrderId(docRef.id);
+                addOrderId(docRef.id);
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+        } catch(error) {
+            console.log("Firebase add doc error:", error);
+        }
+    }
 
+    /**
+     * Genera y agrega una nueva orden, chequeando primero el stock de los items, y actualizandolos de poder realizarse la compra.
+     * @param {*} buyer Datos del comprador con firstName, lastName, email, phone.
+     */
+    const addOrderAndUpdateStock = (buyer) => {
+        const newBatch = batch(); 
+        setShowForm(false);
+        setShowSpinner(true);
+        let outOfStock = [];
+        getProductosByCartArray(itemsCompraArray).then((querySnapshot) => {
+            querySnapshot.docs.forEach((docSnapshot, index) => {
+                const productData = docSnapshot.data();
+                const cantidad = itemsCompraArray[index].quantity;
+                if(productData.stock >= cantidad){
+                    newBatch.update(docSnapshot.ref, {'stock': productData.stock - cantidad});
+                } else {
+                    outOfStock.push({id: docSnapshot.id, cantidad: cantidad,...productData});
+                }
+            })
+
+            if(outOfStock.length === 0){
+                newBatch.commit().then(() => {
+                    addNewOrder(buyer);         
+                });
+            } else {
+                setOutOfStockArray(outOfStock);
+                setOrderError(true);
+            }
+        }).finally(() => {
+            console.log("Stock array:", outOfStockArray);
+            setShowSpinner(false);
+            setOrderFinished(true);
+        });
+    }
+   
     return (
-        <form onSubmit={submitOrder} className={classes.customForm}>
-            <TextField placeholder="Ingresa tu nombre." className={classes.customInput} error={errors['firstName']} name="firstName" label="Nombre" required onChange={handleChange} />
-            {errors['firstName'] ? <div className={classes.errorMessage}>
-                {validationMessages['firstName']}
-            </div> : <></>}
-            <TextField placeholder="Ingresa tu apellido" className={classes.customInput} error={errors['lastName']} name="lastName" label="Apellido" required onChange={handleChange} />
-            {errors['lastName'] ? <div className={classes.errorMessage}>
-                {validationMessages['lastName']}
-            </div> : <></>}
-            <TextField placeholder="Tu teléfono sin guiones ni espacios." className={classes.customInput} error={errors['phone']} name="phone" label="Telefono" required onChange={handleChange} />
-            {errors['phone'] ? <div className={classes.errorMessage}>
-                {validationMessages['phone']}
-            </div> : <></>}
-            <TextField placeholder="Introducí tu email." className={classes.customInput} error={errors['email']} name="email" label="Email" required onChange={handleChange} />
-            {errors['email'] ? <div className={classes.errorMessage}>
-                {validationMessages['email']}
-            </div> : <></>}
-            <TextField placeholder="Volvé a introducir tu email." className={classes.customInput} error={errors['emailConfirmation']} name="emailConfirmation" label="Confirmacion email" required onChange={handleChangeEmailConfirmation} />
-            {errors['emailConfirmation'] ? <div className={classes.errorMessage}>
-                Los dos emails deben coincidir.
-            </div> : <></>}
-            <Grid className={classes.actionsContainer} container direction="row" alignItems="stretch">
-                <Grid className={classes.totalContainer} item xs={6}>
-                    <div className={classes.total}> Total: ${totalPrice}</div>
-                </Grid>
-                <Grid className={classes.submitContainer} item xs={6}>
-                    <Button type='submit' className={classes.submmitButton}>
-                        Finalizar pago
-                    </Button>
-                </Grid>
-            </Grid>
-        </form>
+        <div>
+            <Button className={classes.pagarButton + " scale-in-hor-left"}  onClick={handleOpenOrder}>
+                Ir a pagar <AccountBalanceWalletOutlinedIcon className={classes.arrowIcon} /> 
+            </Button>
+            <Dialog fullWidth maxWidth='md' onClose={handleCloseOrder} aria-labelledby="customized-dialog-title" open={openOrderDialog}>
+                <DialogTitle id="form-dialog-title">
+                    <span className={classes.dialogTitle}>Orden de pago</span>
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseOrder}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    {
+                        showSpinner ? <div className={classes.spinnerContainer} >
+                            <CircularProgress size={"5rem"} className={classes.spinner} />
+                        </div>: <></>
+                    }
+                    {
+                        showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} totalPrice={totalPrice} ended={!showForm}/> : <></>
+                    }
+                    
+                    {
+                        (orderFinished && orderError ) ? <>
+                            <h1>No fue posible ejecutar la compra</h1>
+                            <h2>Productos sin el stock pedido: </h2>
+                            <ul>
+                                {
+                                    outOfStockArray.map((element, i) =>{
+                                        console.log("Elemento", element);
+                                        return (
+                                            <li key={i}>{element.titulo} pedido por {element.cantidad} unidades.</li>
+                                        );
+                                    }) 
+                                }
+                            </ul>
+                        </> : (orderFinished && !orderError) ? <>
+                            <h1>Compra realizada!</h1>
+                            <h2>Id de tu compra: {orderId}</h2>   
+                        </> : <></>
+                    }
+                </DialogContent>
+            </Dialog>
+        </div>
     );
 }

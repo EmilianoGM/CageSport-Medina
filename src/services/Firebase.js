@@ -13,3 +13,5 @@ var firebaseConfig = {
 const fb = firebase.initializeApp(firebaseConfig);
 
 export const database = fb.firestore();
+export const docIdFieldPath = firebase.firestore.FieldPath.documentId();
+
