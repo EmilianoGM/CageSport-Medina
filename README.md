@@ -13,8 +13,9 @@ Proyecto realizado para CoderHouse con React y JavaScript.
 - [Material-Icons](https://material-ui.com/es/components/material-icons/)
 - [React Router Dom](https://reactrouter.com/web/guides/quick-start)
 
-## Navegacion
+## Navegacion y Compra
 ![](CageSportGif.gif)
+![Imagen de firebase](orderImage.jpg)
 
 ## React info / Available Scripts
 In the project directory, you can run:
