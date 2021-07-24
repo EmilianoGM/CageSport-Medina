@@ -28,8 +28,7 @@ export const ItemDetailContainer = props => {
             } else {
                 setItemNoEncontrado(true);
             }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
+        }).catch(() => {
             setItemNoEncontrado(true);
         }).finally(() => {
             setMostrarDetalle(true);

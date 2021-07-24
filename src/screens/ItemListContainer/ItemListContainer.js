@@ -26,9 +26,8 @@ export const ItemListContainer = () => {
                 arrayData.push({id: doc.id, ...doc.data()});
             });
             setItemsAMostrar(arrayData);
-        }).catch((error) => {
+        }).catch(() => {
             history.push("/error");
-            console.log("ERROR:", error);
         }).finally(() => {
             setDataCargada(true);
         });

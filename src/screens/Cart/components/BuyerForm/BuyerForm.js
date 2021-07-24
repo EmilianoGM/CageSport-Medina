@@ -88,7 +88,6 @@ export const BuyerForm = props => {
             let newBuyer = {...buyerFormData};
             delete newBuyer.emailConfirmation;
             setFormError(false);
-            console.log("New buyer", newBuyer);
             addOrder(newBuyer);
         } else {
             setFormError(true);
