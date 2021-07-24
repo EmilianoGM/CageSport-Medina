@@ -8,7 +8,7 @@ var firebaseConfig = {
     storageBucket: "cagesports-4e3aa.appspot.com",
     messagingSenderId: "276377318846",
     appId: "1:276377318846:web:f3dcbf340d7c25b804f5ef"
-  };
+};
 
 const fb = firebase.initializeApp(firebaseConfig);
 

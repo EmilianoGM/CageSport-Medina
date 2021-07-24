@@ -1,25 +1,27 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
+    dropdown: {
+        position: "relative",
+        display: "inline-block",
+        '&:hover': {
+            display: "block",
+            '& div':{
+                display:"block"
+            }
+        }
     },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    brandTitle:{
-        flexGrow: 1,
-    },
-    title: {
-        fontFamily: 'Bungee Inline',
-        fontSize: "1.5em",
-        textDecoration: "none",
-        color: "white",
-    },
-    navStyle: {
-        background: "linear-gradient(90deg, rgba(250,0,0,1) 0%, rgba(0,0,0,1) 100%)"
+    dropdownContent: {
+        //display: "block",
+        display: "none",
+        position: "absolute",
+        padding: "5px",
+        backgroundColor: "#780000",
+        boxShadow: "0px 8px 16px 0px rgba(0,0,0,0.2)",
+        zIndex: "1"
     },
     categoriasButton: {
+        padding: "0px 8px",
         color: "white",
         fontFamily: 'Bebas Neue',
         fontSize: "1.2em",
@@ -30,14 +32,16 @@ const useStyles = makeStyles((theme) => ({
           }
     },
     customLink: {
+        display: 'block',
+        textTransform: 'capitalize',
         fontFamily: 'Bebas Neue',
         fontSize: "1.2em",
-        margin: "0px 5px",
+        margin: "5px",
         color: "white",
         textDecoration: "none",
         [theme.breakpoints.down('xs')]: {
             fontSize: "1em",
-        } 
+        },
     },
     activeCustomLink: {
         color: "#949494"

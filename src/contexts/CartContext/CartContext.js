@@ -2,8 +2,6 @@ import React, {createContext, useState, useEffect } from 'react';
 
 export const CartContext = createContext();
 
-
-
 export const CartComponentContext = props => {
     const [itemsCompraArray, setItemsCompraArray] = useState([]); //Array de items en el carrito de compra.
 

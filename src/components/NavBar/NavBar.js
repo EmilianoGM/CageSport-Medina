@@ -1,31 +1,30 @@
 import React from 'react';
-import { CartWidget } from '../CartWidget/CartWidget';
-import { NavLink, Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography} from '@material-ui/core';
-import SportsMmaRoundedIcon from '@material-ui/icons/SportsMmaRounded';
+import { CategoriesContainer } from './components/CategoriesContainer/CategoriesContainer';
+import { CartWidget } from './components/CartWidget/CartWidget';
+import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, useMediaQuery } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import useStyles from './NavBarStyle';
 
 //Nombre de la marca
 const brandTitle = "Cage Sports";
-// ID categorias
-const indumentaria = "indumentaria";
-const equipamiento = "equipamiento";
-
+const abbreviation = "CS";
 /**
  * Muestra una barra de navegación al usuario junto con la marca y un CartWidget. 
  */
 export default function NavBar() {
     const classes = useStyles();
-    
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down('xs'));
+
     return (
         <div className={classes.root}>
             <AppBar position="static" className={classes.navStyle}>
                 <Toolbar>
                     <Typography variant="h6" className={classes.brandTitle}>
-                        <Link className={classes.title} to={'/'}><SportsMmaRoundedIcon/>{brandTitle}</Link>
+                        <Link className={classes.title} to={'/'}>{matches ? abbreviation : brandTitle}</Link>
                     </Typography>
-                    <NavLink activeClassName={classes.activeCustomLink} className={classes.customLink} to={`/category/${equipamiento}`}>Equipamiento</NavLink>
-                    <NavLink activeClassName={classes.activeCustomLink} className={classes.customLink} to={`/category/${indumentaria}`}>Indumentaria</NavLink>
+                    <CategoriesContainer />   
                     <CartWidget />
                 </Toolbar>
             </AppBar>
