@@ -1,13 +1,22 @@
 # REACT Ecommerce CageSport
 Proyecto realizado para CoderHouse con React y JavaScript.
 - Idea: ecommerce de una tienda de venta de artículos deportivos orientados a las artes marciales mixtas.
-- 22/06/2021 Entrega parcial: Navegación entre categorías con rutas, muestra de items y sus detalles.
+## User brief
+- Un usuario debe poder ingresar, navegar por los productos e ir a sus detalles.
+- Desde el detalle se debe poder ver la descripción, foto y precio e ingresarlo al carrito. 
+- Una vez que el carrito tenga al menos un producto, se deberá visualizar un listado compacto de la orden con el precio total. 
+- Al ingresar su nombre, apellido, teléfono e e-mail (ingresándolo dos veces para corroborar que sea correcto), debe activarse el botón de ‘realizar compra’.
+- Al clickear ‘realizar compra’ debe guardarse en la base de datos una orden que tenga todos los productos, la fecha y dar feedback del número de orden.
+
 ## Dependencias
 - [Material-UI](https://material-ui.com/)
 - [Material-Icons](https://material-ui.com/es/components/material-icons/)
 - [React Router Dom](https://reactrouter.com/web/guides/quick-start)
-## React info / Available Scripts
 
+## Navegacion
+![](CageSportGif.gif)
+
+## React info / Available Scripts
 In the project directory, you can run:
 ### `npm install`
 
@@ -75,3 +84,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Emiliano Medina - CoderHouse
