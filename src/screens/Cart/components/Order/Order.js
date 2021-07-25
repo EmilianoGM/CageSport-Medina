@@ -14,7 +14,7 @@ import useStyles from './OrderStyle';
 export const Order = props => {
     const classes = useStyles();
     const history = useHistory();
-    const { totalPrice, addOrderId, itemsCompraArray, clearCart} = props;
+    const { totalPrice, addOrderId, orderId, itemsCompraArray, clearCart} = props;
     //Flags
     const [openOrderModal, setOpenOrderModal] = useState(false);
     const [showSpinner, setShowSpinner] = useState(false);
@@ -23,7 +23,6 @@ export const Order = props => {
     const [orderError, setOrderError] = useState(false);
     //Data
     const [outOfStockArray, setOutOfStockArray] = useState([]);
-    const [orderId, setOrderId] = useState("");
 
     /**
      * Maneja la apertura de la ventana de dialogo;
@@ -46,7 +45,6 @@ export const Order = props => {
             setOrderError(false);
             setShowSpinner(false);
             setOutOfStockArray([]);
-            setOrderId("");
         }
     };
 
@@ -100,7 +98,6 @@ export const Order = props => {
                 const newOrder = generateOrder(buyer);
                 newBatch.set(newOrderReference, newOrder);
                 newBatch.commit().then(() => {
-                    setOrderId(newOrderReference.id);
                     addOrderId(newOrderReference.id);
                 });
             } else {
@@ -128,7 +125,7 @@ export const Order = props => {
                         </div>: <></>
                     }
                     {   //Formulario datos del comprador
-                        showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} totalPrice={totalPrice} closed={!openOrderModal}/> : <></>
+                        showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} totalPrice={totalPrice}/> : <></>
                     }
                     { //Mensajes de exito o error de compra
                         (orderFinished && orderError ) ? <>

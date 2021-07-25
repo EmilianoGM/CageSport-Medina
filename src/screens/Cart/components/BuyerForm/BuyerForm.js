@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import useStyles from './BuyerFormStyle';
 import {Grid, Button, TextField} from '@material-ui/core';
 
@@ -38,12 +38,12 @@ const validationMessages = new BuyerInfo(
  * @returns 
  */
 export const BuyerForm = props => {
-    const { closed, addOrder, totalPrice} = props;
+    const { addOrder, totalPrice} = props;
     const classes = useStyles();
     const [inputErrors, setInputErrors] = useState(errorInitialState); //errores en inputs.
     const [buyerFormData, setBuyerFormData] = useState(formInitialState); //datos del comprador
     const [formError, setFormError] = useState(false);
-
+ 
     /**
      * Maneja el cambio en un input del formulario y contrasta su valor con las validaciones comprobando errores.
      * @param {*} e Evento.
@@ -70,36 +70,38 @@ export const BuyerForm = props => {
     }
 
     /**
+     * Limpia los inpunts del formulario y resetea los errores.
+     */
+    const clearForm = () => {
+        setInputErrors(errorInitialState);
+        setBuyerFormData(formInitialState);
+    }
+
+    /**
      * Envía la informacion del comprador para la orden, previa validación de la información recibida.
      * @param {*} e Evento.
      */
     const submitOrder = e => {
         e.preventDefault();
-        let formValidation = true;
+        const validations = {formValidation: true, emailValidation: false};
         for(const prop in buyerFormData){
             const regExp = validationsRegEx[prop];
             if(!regExp.test(buyerFormData[prop])){
-                formValidation = false;
+                validations.formValidation = false;
                 break;
             }
         }
-        const emailValidation = buyerFormData.email.localeCompare(buyerFormData.emailConfirmation) === 0;
-        if(formValidation && emailValidation){
+        validations.emailValidation = buyerFormData.email.localeCompare(buyerFormData.emailConfirmation) === 0;
+        if(validations.formValidation && validations.emailValidation){
             const newBuyer = {...buyerFormData};
             delete newBuyer.emailConfirmation;
             setFormError(false);
             addOrder(newBuyer);
+            clearForm();
         } else {
             setFormError(true);
         }
     }
-
-    useEffect(() => {
-        if(closed){
-            setInputErrors(errorInitialState);
-            setBuyerFormData(formInitialState);
-        }
-    }, [closed]);
 
     return (
         <form onSubmit={submitOrder} className={classes.customForm}>

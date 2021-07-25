@@ -15,6 +15,14 @@ export const Cart = () => {
     const [lastOrderId, setLastOrderId] = useState("");
     const { itemsCompraArray, removeItemById, clearCart } = useContext(CartContext);
 
+    /**
+     * Agrega el id de una orden de compra.
+     * @param {*} orderId id (string)
+     */
+    const addOrderId = (orderId) => {
+        setLastOrderId(orderId);
+    }
+
     useEffect(() => {
         const nuevoPrecioTotal = itemsCompraArray.reduce((acc, curr) => acc + (curr.item.precio * curr.quantity), 0);
         setPrecioTotal(nuevoPrecioTotal);
@@ -67,7 +75,7 @@ export const Cart = () => {
                             Limpiar carrito 
                         </Button>
                     </div>
-                    <Order totalPrice={precioTotal} addOrderId={setLastOrderId} itemsCompraArray={itemsCompraArray} clearCart={clearCart} />
+                    <Order orderId={lastOrderId} totalPrice={precioTotal} addOrderId={addOrderId} itemsCompraArray={itemsCompraArray} clearCart={clearCart} />
                 </div>
                 : <div className={classes.sinItemsContainer}>
                     <h1 className="tituloList puff-in-center" >No hay items por el momento en el carrito</h1>
