@@ -64,9 +64,9 @@ export const BuyerForm = props => {
             setInputErrors({...inputErrors, [name]: false});
         }
         setBuyerFormData({
-                ...buyerFormData,
-                [name]: value
-            });        
+            ...buyerFormData,
+            [name]: value
+        });        
     }
 
     /**
@@ -77,7 +77,7 @@ export const BuyerForm = props => {
         e.preventDefault();
         let formValidation = true;
         for(const prop in buyerFormData){
-            let regExp = validationsRegEx[prop];
+            const regExp = validationsRegEx[prop];
             if(!regExp.test(buyerFormData[prop])){
                 formValidation = false;
                 break;
@@ -85,7 +85,7 @@ export const BuyerForm = props => {
         }
         const emailValidation = buyerFormData.email.localeCompare(buyerFormData.emailConfirmation) === 0;
         if(formValidation && emailValidation){
-            let newBuyer = {...buyerFormData};
+            const newBuyer = {...buyerFormData};
             delete newBuyer.emailConfirmation;
             setFormError(false);
             addOrder(newBuyer);

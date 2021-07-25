@@ -13,8 +13,8 @@ export const CategoriesContainer = props => {
                 newCategoriesArray.push(name);
             });
             setCategoriesArray(newCategoriesArray);
-        }).catch((error) => {
-            console.log("Error en categorias ", error);
+        }).catch(() => {
+            setCategoriesArray([]);
         });
     }
 

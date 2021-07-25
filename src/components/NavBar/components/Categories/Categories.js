@@ -9,19 +9,17 @@ export const Categories = props => {
     const { categoriesArray } = props;
 
     return (
-        <>
-            <div className={classes.dropdown}>
+        <div className={classes.dropdown}>
             <Button className={classes.categoriasButton}>Categorias<ArrowDropDownIcon /></Button>
-                <div className={classes.dropdownContent}>
-                    {categoriesArray.map((category, i) => {
-                        return(
-                            <NavLink key={i} activeClassName={classes.activeCustomLink} className={classes.customLink} to={`/category/${category}`}>
-                                {category}
-                            </NavLink>
-                        );
-                    })}
-                </div>
+            <div className={classes.dropdownContent}>
+                {categoriesArray.map((category, i) => {
+                    return (
+                        <NavLink key={i} activeClassName={classes.activeCustomLink} className={classes.customLink} to={`/category/${category}`}>
+                            {category}
+                        </NavLink>
+                    );
+                })}
             </div>
-        </>
+        </div>
     );
 }

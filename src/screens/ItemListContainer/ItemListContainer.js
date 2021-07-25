@@ -21,7 +21,7 @@ export const ItemListContainer = () => {
     const getData = () => {
         setDataCargada(false);
         getProductos(id).then((querySnapshot) => {
-            let arrayData = [];
+            const arrayData = [];
             querySnapshot.forEach((doc) => {
                 arrayData.push({id: doc.id, ...doc.data()});
             });

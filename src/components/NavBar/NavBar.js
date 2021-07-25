@@ -9,6 +9,7 @@ import useStyles from './NavBarStyle';
 //Nombre de la marca
 const brandTitle = "Cage Sports";
 const abbreviation = "CS";
+
 /**
  * Muestra una barra de navegación al usuario junto con la marca y un CartWidget. 
  */

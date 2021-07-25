@@ -12,33 +12,13 @@ import useStyles from './CartStyles';
 export const Cart = () => {
     const classes = useStyles();
     const [precioTotal, setPrecioTotal] = useState(0);
-    const [lastOrderId, setLastOrderId] = useState();
-    const [showOrderId, setShowOrderId] = useState(false);
+    const [lastOrderId, setLastOrderId] = useState("");
     const { itemsCompraArray, removeItemById, clearCart } = useContext(CartContext);
 
-
-    /**
-     * Calcula el precio total sumando el precio por cada item de compra
-     */
-    const setTotalPrice = () => {
-        let nuevoPrecioTotal = 0;
-        itemsCompraArray.forEach((element) => {
-            nuevoPrecioTotal += element.item.precio * element.quantity;
-        });
+    useEffect(() => {
+        const nuevoPrecioTotal = itemsCompraArray.reduce((acc, curr) => acc + (curr.item.precio * curr.quantity), 0);
         setPrecioTotal(nuevoPrecioTotal);
-    }
-
-    /**
-     * Establece el ultimo id de compra realizado   
-     * @param {*} id Id del documento de la orden de compra
-     */
-    const setNewOrderId = (id) => {
-        setLastOrderId(id);
-        setShowOrderId(true);
-    }
-    
-    useEffect(setTotalPrice
-        , [itemsCompraArray]);
+    }, [itemsCompraArray]);
 
     return (
         <>
@@ -87,12 +67,12 @@ export const Cart = () => {
                             Limpiar carrito 
                         </Button>
                     </div>
-                    <Order totalPrice={precioTotal} addOrderId={setNewOrderId} itemsCompraArray={itemsCompraArray} clearCart={clearCart} />
+                    <Order totalPrice={precioTotal} addOrderId={setLastOrderId} itemsCompraArray={itemsCompraArray} clearCart={clearCart} />
                 </div>
                 : <div className={classes.sinItemsContainer}>
                     <h1 className="tituloList puff-in-center" >No hay items por el momento en el carrito</h1>
                     <Link className={classes.continuarLink} to={'/'}>Continuar comprando</Link>
-                    { showOrderId ? <h1 className="tituloList"> Ultima orden de compra: {lastOrderId}.</h1> : <></> }
+                    { lastOrderId ? <h1 className="tituloList"> Ultima orden de compra: {lastOrderId}.</h1> : <></> }
                 </div>
             }
         </>

@@ -9,7 +9,7 @@ import useStyles from './OrderStyle';
 
 /**
  * Muestra un formulario de orden de compra al usuario.
- * @param {*} props totalPrice | addOrderId
+ * @param {*} props totalPrice | addOrderId | itemsCompraArray | clearCart
  */
 export const Order = props => {
     const classes = useStyles();
@@ -23,7 +23,7 @@ export const Order = props => {
     const [orderError, setOrderError] = useState(false);
     //Data
     const [outOfStockArray, setOutOfStockArray] = useState([]);
-    const [orderId, setOrderId] = useState();
+    const [orderId, setOrderId] = useState("");
 
     /**
      * Maneja la apertura de la ventana de dialogo;
@@ -46,7 +46,7 @@ export const Order = props => {
             setOrderError(false);
             setShowSpinner(false);
             setOutOfStockArray([]);
-            setOrderId();
+            setOrderId("");
         }
     };
 
@@ -57,9 +57,9 @@ export const Order = props => {
      */
     const generateOrder = (buyer) => {
         const date = new Date();
-        let newItemsArray = [];
+        const newItemsArray = [];
         itemsCompraArray.forEach(element => {
-            let data = {
+            const data = {
                 id: element.item.id,
                 title: element.item.titulo,
                 price: element.item.precio,
@@ -85,7 +85,7 @@ export const Order = props => {
         const newOrderReference = getNewOrderReference();
         setShowForm(false);
         setShowSpinner(true);
-        let outOfStock = [];
+        const outOfStock = [];
         getProductosByCartArray(itemsCompraArray).then((querySnapshot) => {
             querySnapshot.docs.forEach((docSnapshot, index) => {
                 const productData = docSnapshot.data();
@@ -107,7 +107,7 @@ export const Order = props => {
                 setOutOfStockArray(outOfStock);
                 setOrderError(true);
             }
-        }).catch((error)=>{
+        }).catch(()=>{
             history.push("/error");
         })
         .finally(() => {
@@ -128,7 +128,7 @@ export const Order = props => {
                         </div>: <></>
                     }
                     {   //Formulario datos del comprador
-                        showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} totalPrice={34789} closed={!openOrderModal}/> : <></>
+                        showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} totalPrice={totalPrice} closed={!openOrderModal}/> : <></>
                     }
                     { //Mensajes de exito o error de compra
                         (orderFinished && orderError ) ? <>

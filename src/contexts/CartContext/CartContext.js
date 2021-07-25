@@ -10,9 +10,8 @@ export const CartComponentContext = props => {
      */
     const setArrayDataFromSession = () => {
         const stringJsonData = sessionStorage.getItem("cartData");
-        let arrayData = [];
         if(stringJsonData){
-            arrayData = JSON.parse(stringJsonData);
+            const arrayData = JSON.parse(stringJsonData);
             if(arrayData.length !== 0){
                 setItemsCompraArray(arrayData);
             } 
@@ -23,7 +22,6 @@ export const CartComponentContext = props => {
      * Guarda los datos del array de compra en Session Storage, en formato JSON.
      */
     const setSessionStorage = () => {
-        //sessionStorage.clear();
         const arrayDataString = JSON.stringify(itemsCompraArray);
         sessionStorage.setItem("cartData", arrayDataString);
     }
@@ -41,24 +39,6 @@ export const CartComponentContext = props => {
     }
 
     /**
-     * Modifica la cantidad de un item en el array de compra, adicionando o restando dicha cantidad. Si el resultado de la cantidad del item es cero, elimina el item.
-     * @param {*} itemId El id del item a buscar.
-     * @param {*} quantity Cantidad a agregar (positiva) o restar (negativa).
-     */
-     const modifyQuantity = (itemId, quantity) => {
-        let nuevoArrayCompra = [...itemsCompraArray];
-        let index = nuevoArrayCompra.findIndex(element => element.item.id === itemId);
-        let itemAModificar = nuevoArrayCompra[index];
-        itemAModificar.quantity += quantity;
-        if(itemAModificar.quantity <= 0){
-            removeItemByIndex(index);
-        } else {
-            nuevoArrayCompra[index] = itemAModificar;
-            setItemsCompraArray(nuevoArrayCompra);
-        }
-    }
-
-    /**
      * Retorna si se encuentra un item en el array de compra del carrito.
      * @param {*} id El id del item a buscar.
      * @returns True si se encuentra el item, false en caso contrario.
@@ -72,8 +52,8 @@ export const CartComponentContext = props => {
      * @param {*} itemId Id del item a remover.
      */
     const removeItemById = (itemId) => {
-        let arrayABuscar = [...itemsCompraArray];
-        let index = arrayABuscar.findIndex(element => element.item.id === itemId);
+        const arrayABuscar = [...itemsCompraArray];
+        const index = arrayABuscar.findIndex(element => element.item.id === itemId);
         removeItemByIndex(index);
     }
     
@@ -82,7 +62,7 @@ export const CartComponentContext = props => {
      * @param {*} index Indice del item a remover.
      */
     const removeItemByIndex = (index) => {
-        let nuevoArrayCompra = [...itemsCompraArray];
+        const nuevoArrayCompra = [...itemsCompraArray];
         nuevoArrayCompra.splice(index, 1);
         setItemsCompraArray(nuevoArrayCompra);
     }
@@ -99,17 +79,14 @@ export const CartComponentContext = props => {
      * @returns La cantidad total (number)
      */
     const getTotalQuantity = () => {
-        let cantidadTotal = 0;
-        itemsCompraArray.forEach((element) => {
-            cantidadTotal += element.quantity;
-        });
+        const cantidadTotal = itemsCompraArray.reduce((acc, curr) => acc + curr.quantity, 0);
         return cantidadTotal;
     }
 
     useEffect(setArrayDataFromSession, []);
     useEffect(setSessionStorage, [itemsCompraArray]);
 
-    return <CartContext.Provider value={{ itemsCompraArray, addItem, modifyQuantity, removeItemById, removeItemByIndex, clearCart, getTotalQuantity}}>
+    return <CartContext.Provider value={{ itemsCompraArray, addItem, removeItemById, removeItemByIndex, clearCart, getTotalQuantity}}>
         {props.children}
     </CartContext.Provider>
 }

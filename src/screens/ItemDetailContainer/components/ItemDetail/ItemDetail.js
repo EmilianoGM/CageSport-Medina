@@ -14,17 +14,15 @@ import useStyles from './ItemDetailStyle';
 export const ItemDetail = ({ item }) => {
     const classes = useStyles();
     const history = useHistory();
-    const { addItem, modifyQuantity } = useContext(CartContext);
+    const { addItem, removeItemById } = useContext(CartContext);
     const { id, titulo, detalle, precio, imagenUrl } = item;
-    const [cantidad, setCantidad] = useState(0);
     const [compraTerminada, setCompraTerminada] = useState(false);
     
     /**
      * Cancela el agregado del item, remueve su cantidad del array de compra y muestra nuevamente el ItemCount.
      */
     const cancelPurchase = () => {
-        modifyQuantity(id, -cantidad);
-        setCantidad(0);
+        removeItemById(id);
         setCompraTerminada(false);
     }
 
@@ -33,17 +31,14 @@ export const ItemDetail = ({ item }) => {
      * @param {*} cantidadItem Cantidad a agregar.
      */
     const addToCart = (cantidadItem) => {
-        setCantidad(cantidadItem);
         addItem(item, cantidadItem);
-        //console.log("CANTIDAD: ", cantidadItems); //linea de prueba, recibe la cantidad de items seleccionada por el usuario
         setCompraTerminada(true);
     };
 
-    /**
+    /**7                                                                                                                                                                                     
      * Redirecciona a cart.
      */
     const redirectCart = () =>{
-        setCantidad(0);
         history.push("/cart");
     }
 
@@ -62,7 +57,7 @@ export const ItemDetail = ({ item }) => {
                             <Button className={`${classes.buttonStyled} ${classes.buttonTerminar}`} onClick={() => {redirectCart()}}> Terminar compra </Button>
                             <Button className={`${classes.buttonStyled} ${classes.buttonTerminar}`} onClick={() => {history.goBack()}}> Continuar comprando </Button>
                             <Button className={`${classes.buttonStyled} ${classes.buttonCancelar}`} onClick={() => {cancelPurchase()}}>Cancelar</Button>
-                        </div> : <ItemCount stock={item.stock} initial={0} onAdd={addToCart} />
+                        </div> : <ItemCount stock={item.stock} onAdd={addToCart} />
                     }
                 </div>
             </Grid>

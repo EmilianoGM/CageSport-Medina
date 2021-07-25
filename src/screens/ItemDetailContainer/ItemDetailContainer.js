@@ -12,8 +12,7 @@ import useStyles from './ItemDetailContainerStyle';
 export const ItemDetailContainer = props => {
     const classes = useStyles();
     const { id } = useParams();
-
-    const [itemDetalle, setItemDetalle] = useState();
+    const [itemDetalle, setItemDetalle] = useState({});
     const [mostrarDetalle, setMostrarDetalle] = useState(false);
     const [itemNoEncontrado, setItemNoEncontrado] = useState(false);
 
@@ -42,7 +41,7 @@ export const ItemDetailContainer = props => {
         {
             mostrarDetalle ? <>
                 {itemNoEncontrado ? <h1 className={classes.notFoundMensaje}>¡Ups! Ese item no se encuentra en nuestro catálogo.</h1> : 
-                <ItemDetail item={itemDetalle}></ItemDetail>}
+                <ItemDetail item={itemDetalle} />}
             </> : 
             <div className="spinner-container" >
                 <CircularProgress size={"5rem"} className="spinner" />

@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Grid, Button} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import useStyles from './ItemCountStyle';
 
 export const ItemCount = props => {
-    const {stock, initial, onAdd} = props;
+    const {stock, onAdd} = props;
     const classes = useStyles();
-    const [count, setCount] = React.useState(initial);
+    const [count, setCount] = useState(0);
 
     return(
         <Grid className={classes.countContainer} container direction="row" justify="flex-start" alignItems="flex-start">
