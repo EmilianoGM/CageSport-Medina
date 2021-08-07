@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import { CartContext } from '../../contexts/CartContext/CartContext';
 import { Order } from './components/Order/Order';
 import { Link } from 'react-router-dom';
@@ -11,9 +11,8 @@ import useStyles from './CartStyles';
  */
 export const Cart = () => {
     const classes = useStyles();
-    const [precioTotal, setPrecioTotal] = useState(0);
     const [lastOrderId, setLastOrderId] = useState("");
-    const { itemsCompraArray, removeItemById, clearCart } = useContext(CartContext);
+    const { itemsCompraArray, removeItemById, getTotalPrice , clearCart } = useContext(CartContext);
 
     /**
      * Agrega el id de una orden de compra.
@@ -22,11 +21,6 @@ export const Cart = () => {
     const addOrderId = (orderId) => {
         setLastOrderId(orderId);
     }
-
-    useEffect(() => {
-        const nuevoPrecioTotal = itemsCompraArray.reduce((acc, curr) => acc + (curr.item.precio * curr.quantity), 0);
-        setPrecioTotal(nuevoPrecioTotal);
-    }, [itemsCompraArray]);
 
     return (
         <>
@@ -67,7 +61,7 @@ export const Cart = () => {
                             Total:
                         </Grid>
                         <Grid className={`${classes.alinearDerecha} ${classes.precioTotal}`} item xs={6}>
-                            ${precioTotal}
+                            ${getTotalPrice()}
                         </Grid>
                     </Grid>
                     <div className={classes.buttonsContainer}>
@@ -75,7 +69,7 @@ export const Cart = () => {
                             Limpiar carrito 
                         </Button>
                     </div>
-                    <Order orderId={lastOrderId} totalPrice={precioTotal} addOrderId={addOrderId} itemsCompraArray={itemsCompraArray} clearCart={clearCart} />
+                    <Order orderId={lastOrderId} addOrderId={addOrderId} itemsCompraArray={itemsCompraArray} clearCart={clearCart} getTotalPrice={getTotalPrice} />
                 </div>
                 : <div className={classes.sinItemsContainer}>
                     <h1 className="tituloList puff-in-center" >No hay items por el momento en el carrito</h1>

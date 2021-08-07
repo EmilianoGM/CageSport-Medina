@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { getProductoById } from '../../services/CloudFirestoreService';
 import { ItemDetail } from './components/ItemDetail/ItemDetail';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './ItemDetailContainerStyle';
 
@@ -11,38 +11,43 @@ import useStyles from './ItemDetailContainerStyle';
  */
 export const ItemDetailContainer = props => {
     const classes = useStyles();
+    const history = useHistory();
     const { id } = useParams();
     const [itemDetalle, setItemDetalle] = useState({});
-    const [mostrarDetalle, setMostrarDetalle] = useState(false);
-    const [itemNoEncontrado, setItemNoEncontrado] = useState(false);
 
     /**
      * Obtiene la data y la filtra según el id del item.
      */
     const getItem = () => {
-        setMostrarDetalle(false);
         getProductoById(id).then((doc) => {
             if (doc.exists) {
                 setItemDetalle({id: doc.id, ...doc.data()});
             } else {
-                setItemNoEncontrado(true);
+                history.push({
+                    pathname: '/error',
+                    state: { 
+                        title: '¡Ups! No se encuentra ese producto.',
+                        message: 'El producto seleccionado no esta disponible en el catalogo.'
+                    }
+                  });
             }
         }).catch(() => {
-            setItemNoEncontrado(true);
-        }).finally(() => {
-            setMostrarDetalle(true);
+            history.push({
+                pathname: '/error',
+                state: { 
+                    title: '¡Ups! Ocurrio un problema.',
+                    message: 'Los productos no estan disponibles en este momento, vuelva mas tarde.'
+                }
+              });
         });
     }
 
-    useEffect(getItem, [id]);
+    useEffect(getItem, [history, id]);
 
     return (
         <div className={classes.itemDetailContainer}>
         {
-            mostrarDetalle ? <>
-                {itemNoEncontrado ? <h1 className={classes.notFoundMensaje}>¡Ups! Ese item no se encuentra en nuestro catálogo.</h1> : 
-                <ItemDetail item={itemDetalle} />}
-            </> : 
+            (itemDetalle && Object.keys(itemDetalle).length !== 0)  ? <ItemDetail item={itemDetalle} /> : 
             <div className="spinner-container" >
                 <CircularProgress size={"5rem"} className="spinner" />
             </div>

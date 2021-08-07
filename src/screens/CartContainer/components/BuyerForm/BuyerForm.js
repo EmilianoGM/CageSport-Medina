@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import { CartContext } from '../../../../contexts/CartContext/CartContext';
 import useStyles from './BuyerFormStyle';
 import {Grid, Button, TextField} from '@material-ui/core';
 
@@ -38,12 +39,13 @@ const validationMessages = new BuyerInfo(
  * @returns 
  */
 export const BuyerForm = props => {
-    const { addOrder, totalPrice} = props;
+    const { addOrder } = props;
+    const { getTotalPrice } = useContext(CartContext);
     const classes = useStyles();
     const [inputErrors, setInputErrors] = useState(errorInitialState); //errores en inputs.
     const [buyerFormData, setBuyerFormData] = useState(formInitialState); //datos del comprador
     const [formError, setFormError] = useState(false);
- 
+
     /**
      * Maneja el cambio en un input del formulario y contrasta su valor con las validaciones comprobando errores.
      * @param {*} e Evento.
@@ -127,7 +129,7 @@ export const BuyerForm = props => {
             </div> : <></>}
             <Grid className={classes.actionsContainer} container direction="row" alignItems="stretch">
                 <Grid className={classes.totalContainer} item xs={6}>
-                    <div className={classes.total}> Total: ${totalPrice}</div>
+                    <div className={classes.total}> Total: ${getTotalPrice()}</div>
                 </Grid>
                 <Grid className={classes.submitContainer} item xs={6}>
                     <Button type='submit' className={classes.submmitButton}>

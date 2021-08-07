@@ -7,11 +7,9 @@ export const CategoriesContainer = props => {
     
     const getCategoriesData = () => {
         getCategories().then((querySnapshot) => {
-            const newCategoriesArray = [];
-            querySnapshot.forEach((doc) => {
-                const name = doc.data().name;
-                newCategoriesArray.push(name);
-            });
+            const newCategoriesArray = querySnapshot.docs.map((doc) => {
+                return doc.data().name;
+            });            
             setCategoriesArray(newCategoriesArray);
         }).catch(() => {
             setCategoriesArray([]);

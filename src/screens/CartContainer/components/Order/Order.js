@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import { getBatch, getProductosByCartArray, getNewOrderReference } from '../../../../services/CloudFirestoreService';
 import { BuyerForm } from '../BuyerForm/BuyerForm';
+import { Error } from '../../../ErrorContainer/Error';
 import { Modal } from '../../../../components/Modal/Modal';
 import {Button, CircularProgress} from '@material-ui/core';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
@@ -14,7 +15,7 @@ import useStyles from './OrderStyle';
 export const Order = props => {
     const classes = useStyles();
     const history = useHistory();
-    const { totalPrice, addOrderId, orderId, itemsCompraArray, clearCart} = props;
+    const { addOrderId, orderId, itemsCompraArray, clearCart, getTotalPrice} = props;
     //Flags
     const [openOrderModal, setOpenOrderModal] = useState(false);
     const [showSpinner, setShowSpinner] = useState(false);
@@ -55,21 +56,20 @@ export const Order = props => {
      */
     const generateOrder = (buyer) => {
         const date = new Date();
-        const newItemsArray = [];
-        itemsCompraArray.forEach(element => {
-            const data = {
-                id: element.item.id,
-                title: element.item.titulo,
-                price: element.item.precio,
-                quantity: element.quantity
+        const total = getTotalPrice();
+        const newItemsArray = itemsCompraArray.map((itemCompra) => {
+            return {
+                id: itemCompra.item.id,
+                title: itemCompra.item.titulo,
+                price: itemCompra.item.precio,
+                quantity: itemCompra.quantity
             }
-            newItemsArray.push(data);
         });
         const newOrder = {
             buyer: buyer,
             items: newItemsArray,
             date: date,
-            total: totalPrice
+            total: total
         }
         return newOrder;
     }
@@ -105,7 +105,13 @@ export const Order = props => {
                 setOrderError(true);
             }
         }).catch(()=>{
-            history.push("/error");
+            history.push({
+                pathname: '/error',
+                state: { 
+                    title: '¡Ups! Ocurrio un problema al generar la orden',
+                    message: 'La compra no fue realizada, estamos solucionandolo.'
+                }
+            });
         })
         .finally(() => {
             setShowSpinner(false);
@@ -125,23 +131,20 @@ export const Order = props => {
                         </div>: <></>
                     }
                     {   //Formulario datos del comprador
-                        showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} totalPrice={totalPrice}/> : <></>
+                        showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} /> : <></>
                     }
                     { //Mensajes de exito o error de compra
-                        (orderFinished && orderError ) ? <>
-                            <h1>No fue posible ejecutar la compra</h1>
-                            <h2>Productos sin el stock pedido: </h2>
+                        (orderFinished && orderError ) ? <Error title={'Hay productos sin stock'} message={'Remove los productos sin el stock pedido:'}>
                             <ul>
                                 {
                                     outOfStockArray.map((element, i) =>{
-                                        console.log("Elemento", element);
                                         return (
                                             <li key={i}>{element.titulo} pedido por {element.cantidad} unidades.</li>
                                         );
                                     }) 
                                 }
                             </ul>
-                        </> : (orderFinished && !orderError) ? <>
+                        </Error> : (orderFinished && !orderError) ? <>
                             <h1>Compra realizada!</h1>
                             <h2>Id de tu compra: {orderId}</h2>   
                         </> : <></>

@@ -35,7 +35,7 @@ export const ItemDetail = ({ item }) => {
         setCompraTerminada(true);
     };
 
-    /**7                                                                                                                                                                                     
+    /**                                                                                                                                                                                     
      * Redirecciona a cart.
      */
     const redirectCart = () =>{

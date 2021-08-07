@@ -62,8 +62,8 @@ export const CartComponentContext = props => {
      * @param {*} index Indice del item a remover.
      */
     const removeItemByIndex = (index) => {
-        const nuevoArrayCompra = [...itemsCompraArray];
-        nuevoArrayCompra.splice(index, 1);
+        const nuevoArrayCompra = [...itemsCompraArray].slice(0,index).concat([...itemsCompraArray].slice(index + 1));
+
         setItemsCompraArray(nuevoArrayCompra);
     }
 
@@ -79,14 +79,25 @@ export const CartComponentContext = props => {
      * @returns La cantidad total (number)
      */
     const getTotalQuantity = () => {
-        const cantidadTotal = itemsCompraArray.reduce((acc, curr) => acc + curr.quantity, 0);
+        const cantidadTotal = itemsCompraArray.map((itemCompra) => { return itemCompra.quantity})
+                              .reduce((acc, curr) => acc + curr, 0);
         return cantidadTotal;
+    }
+
+    /**
+     * Suma el precio total de items pedidos en el array de compra.
+     * @returns El precio total (number)
+     */
+    const getTotalPrice = () => {
+        const totalPrice = itemsCompraArray.map((itemCompra) => { return itemCompra.quantity * itemCompra.item.precio})
+                            .reduce((acc,curr) => acc + curr, 0);
+        return totalPrice;
     }
 
     useEffect(setArrayDataFromSession, []);
     useEffect(setSessionStorage, [itemsCompraArray]);
 
-    return <CartContext.Provider value={{ itemsCompraArray, addItem, removeItemById, removeItemByIndex, clearCart, getTotalQuantity}}>
+    return <CartContext.Provider value={{ itemsCompraArray, addItem, removeItemById, removeItemByIndex, clearCart, getTotalQuantity, getTotalPrice}}>
         {props.children}
     </CartContext.Provider>
 }

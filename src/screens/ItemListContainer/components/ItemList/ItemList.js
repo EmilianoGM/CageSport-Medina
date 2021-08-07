@@ -12,7 +12,7 @@ export const ItemList = ( {items} ) => {
         <Grid className="scale-in-top" container direction="row" justify="space-evenly" alignItems="stretch" >
             { items.map((element, i) => {
                 return (
-                    <Item item={element} key={i} />
+                    <Item item={element} key={element.id} />
                 );
             })}
         </Grid>

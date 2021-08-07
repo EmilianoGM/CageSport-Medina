@@ -2,8 +2,8 @@ import React from 'react';
 import { ItemListContainer } from '../screens/ItemListContainer/ItemListContainer';
 import { ItemDetailContainer } from '../screens/ItemDetailContainer/ItemDetailContainer';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Cart } from '../screens/Cart/Cart';
-import { Error } from '../screens/Error/Error';
+import { Cart } from '../screens/CartContainer/Cart';
+import { Error } from '../screens/ErrorContainer/Error';
 
 export const Router = () => {
     return (
@@ -26,9 +26,7 @@ export const Router = () => {
           <Route path="/cart">
             <Cart />
           </Route>
-          <Route path="/error">
-            <Error />
-          </Route>
+          <Route component={Error} path="/error" />
         </Switch>
     );
 }

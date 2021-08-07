@@ -17,17 +17,23 @@ export const ItemListContainer = () => {
     /**
      * Obtiene la data desde firebase segun id de categoría.
      */
-    
+
     const getData = () => {
         setDataCargada(false);
         getProductos(id).then((querySnapshot) => {
-            const arrayData = [];
-            querySnapshot.forEach((doc) => {
-                arrayData.push({id: doc.id, ...doc.data()});
+            const arrayData = querySnapshot.docs.map((doc) => {
+               return {id: doc.id, ...doc.data()};
             });
             setItemsAMostrar(arrayData);
-        }).catch(() => {
-            history.push("/error");
+        }).catch((error) => {
+            console.log("ERROR", error);
+            history.push({
+                pathname: '/error',
+                state: { 
+                    title: '¡Ups! Ocurrio un problema al mostrar los productos',
+                    message: 'Los productos no estan disponibles en este momento, estamos solucionandolo.'
+                }
+            });
         }).finally(() => {
             setDataCargada(true);
         });
