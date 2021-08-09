@@ -8,8 +8,6 @@ import {Button, CircularProgress} from '@material-ui/core';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import useStyles from './OrderStyle';
 
-
-
 /**
  * Muestra un formulario de orden de compra al usuario.
  * @param {*} props totalPrice | addOrderId | itemsCompraArray | clearCart
@@ -161,29 +159,3 @@ export const Order = props => {
         </>
     );
 }
-
-/*
-const p1 = new Promise((res, rej) => {
-            console.log("Promesa 1 | getProductos control de stock");
-            setTimeout(() => {
-                res(3);
-            }, 3000);
-        });
-        
-        const p2 = new Promise((res, rej) => {
-            console.log("Promesa 2 | Commit batch y agregar compra.")
-            setTimeout(() => {
-                res("hdtghd4afg79");
-            }, 3000);
-        });
-
-p1.then((n) => {
-            const newOrder = generateOrder(buyer);
-            p2.then((newID) => {  
-                addOrderId(newID);
-                setShowSpinner(false);
-                setOrderFinished(true);
-                console.log("- Id agregado -");
-            });
-        });
-*/
