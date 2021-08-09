@@ -14,8 +14,8 @@ import useStyles from './ItemDetailStyle';
 export const ItemDetail = ({ item }) => {
     const classes = useStyles();
     const history = useHistory();
-    const { addItem, removeItemById } = useContext(CartContext);
-    const { id, titulo, detalle, precio, imagenUrl } = item;
+    const { addItem, removeItemById, isInCart } = useContext(CartContext);
+    const { id, titulo, detalle, precio, imagenUrl, stock } = item;
     const [compraTerminada, setCompraTerminada] = useState(false);
     
     /**
@@ -42,6 +42,15 @@ export const ItemDetail = ({ item }) => {
         history.push("/cart");
     }
 
+    const getStock = () => {
+        const cartItem = isInCart(id);
+        if(cartItem !== undefined){
+            return cartItem.item.stock - cartItem.quantity;
+        } else {
+            return stock;
+        }
+    }
+
     return(
         <Grid container direction="row" justify="center" alignItems="flex-start" >
             <Grid  className={classes.imgContainer} item xs={12} sm={6}>
@@ -57,8 +66,9 @@ export const ItemDetail = ({ item }) => {
                             <Button className={`${classes.buttonStyled} ${classes.buttonTerminar}`} onClick={() => {redirectCart()}}> Terminar compra </Button>
                             <Button className={`${classes.buttonStyled} ${classes.buttonTerminar}`} onClick={() => {history.goBack()}}> Continuar comprando </Button>
                             <Button className={`${classes.buttonStyled} ${classes.buttonCancelar}`} onClick={() => {cancelPurchase()}}>Cancelar</Button>
-                        </div> : <ItemCount stock={item.stock} onAdd={addToCart} />
+                        </div> : <ItemCount stock={getStock()} onAdd={addToCart} />
                     }
+                    { (getStock() <= 0 && !compraTerminada)? <h2 className={classes.sinStock}>No hay más stock por el momento.</h2> : <></>}
                 </div>
             </Grid>
         </Grid>

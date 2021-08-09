@@ -77,6 +77,11 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         margin: "10px auto",
         borderColor: "#8F0B0B",
+    },
+    sinStock: {
+        textAlign: 'center',
+        fontSize: '0.7em',
+        color: "#F36363"
     }
 }));
 

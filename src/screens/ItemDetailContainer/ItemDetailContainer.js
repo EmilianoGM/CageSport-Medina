@@ -27,7 +27,8 @@ export const ItemDetailContainer = props => {
                     pathname: '/error',
                     state: { 
                         title: '¡Ups! No se encuentra ese producto.',
-                        message: 'El producto seleccionado no esta disponible en el catalogo.'
+                        message: 'El producto seleccionado no esta disponible en el catalogo.',
+                        light: true
                     }
                   });
             }
@@ -36,13 +37,14 @@ export const ItemDetailContainer = props => {
                 pathname: '/error',
                 state: { 
                     title: '¡Ups! Ocurrio un problema.',
-                    message: 'Los productos no estan disponibles en este momento, vuelva mas tarde.'
+                    message: 'Los productos no estan disponibles en este momento, vuelva mas tarde.',
+                    light: true
                 }
               });
         });
     }
-
-    useEffect(getItem, [history, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(getItem, [id]);
 
     return (
         <div className={classes.itemDetailContainer}>

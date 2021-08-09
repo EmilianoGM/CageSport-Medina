@@ -32,19 +32,26 @@ export const CartComponentContext = props => {
      * @param {*} quantity Cantidad del item.
      */
     const addItem = (item, quantity) => {
-        if(isInCart(item.id)){
-            removeItemById(item.id);
+        if(isInCart(item.id) !== undefined){
+            const newCompraArray = itemsCompraArray.map(itemCompra => {
+                if (itemCompra.item.id === item.id) {
+                  return { ...itemCompra, quantity: itemCompra.quantity + quantity };
+                }
+                return itemCompra;
+            });
+            setItemsCompraArray(newCompraArray);
+        } else {
+            setItemsCompraArray(itemsCompraArray => [...itemsCompraArray, {item: item, quantity: quantity}]);
         }
-        setItemsCompraArray(itemsCompraArray => [...itemsCompraArray, {item: item, quantity: quantity}]);
     }
 
     /**
      * Retorna si se encuentra un item en el array de compra del carrito.
      * @param {*} id El id del item a buscar.
-     * @returns True si se encuentra el item, false en caso contrario.
+     * @returns El item si se encuentra, undefined en caso contrario.
      */
      const isInCart = (id) => {
-        return itemsCompraArray.find(element => element.item.id === id) === undefined ? false : true;
+        return itemsCompraArray.find(element => element.item.id === id);
     }
 
     /**
@@ -63,7 +70,6 @@ export const CartComponentContext = props => {
      */
     const removeItemByIndex = (index) => {
         const nuevoArrayCompra = [...itemsCompraArray].slice(0,index).concat([...itemsCompraArray].slice(index + 1));
-
         setItemsCompraArray(nuevoArrayCompra);
     }
 
@@ -97,7 +103,7 @@ export const CartComponentContext = props => {
     useEffect(setArrayDataFromSession, []);
     useEffect(setSessionStorage, [itemsCompraArray]);
 
-    return <CartContext.Provider value={{ itemsCompraArray, addItem, removeItemById, removeItemByIndex, clearCart, getTotalQuantity, getTotalPrice}}>
+    return <CartContext.Provider value={{ itemsCompraArray, addItem, isInCart, removeItemById, removeItemByIndex, clearCart, getTotalQuantity, getTotalPrice}}>
         {props.children}
     </CartContext.Provider>
 }

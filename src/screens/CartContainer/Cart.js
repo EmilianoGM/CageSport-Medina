@@ -72,9 +72,11 @@ export const Cart = () => {
                     <Order orderId={lastOrderId} addOrderId={addOrderId} itemsCompraArray={itemsCompraArray} clearCart={clearCart} getTotalPrice={getTotalPrice} />
                 </div>
                 : <div className={classes.sinItemsContainer}>
-                    <h1 className="tituloList puff-in-center" >No hay items por el momento en el carrito</h1>
+                    { lastOrderId ? <><h1 className="tituloList">¡COMPRA EXITOSA!</h1>
+                    <h1 className="tituloList">Tu orden de compra: {lastOrderId}.</h1> </> : 
+                    <h1 className="tituloList puff-in-center" >No hay items por el momento en el carrito</h1> }
                     <Link className={classes.continuarLink} to={'/'}>Continuar comprando</Link>
-                    { lastOrderId ? <h1 className="tituloList"> Ultima orden de compra: {lastOrderId}.</h1> : <></> }
+                    
                 </div>
             }
         </>

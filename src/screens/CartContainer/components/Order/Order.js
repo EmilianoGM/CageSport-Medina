@@ -8,6 +8,8 @@ import {Button, CircularProgress} from '@material-ui/core';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import useStyles from './OrderStyle';
 
+
+
 /**
  * Muestra un formulario de orden de compra al usuario.
  * @param {*} props totalPrice | addOrderId | itemsCompraArray | clearCart
@@ -24,6 +26,8 @@ export const Order = props => {
     const [orderError, setOrderError] = useState(false);
     //Data
     const [outOfStockArray, setOutOfStockArray] = useState([]);
+
+    
 
     /**
      * Maneja la apertura de la ventana de dialogo;
@@ -99,24 +103,25 @@ export const Order = props => {
                 newBatch.set(newOrderReference, newOrder);
                 newBatch.commit().then(() => {
                     addOrderId(newOrderReference.id);
+                    setShowSpinner(false);
+                    setOrderFinished(true);
                 });
             } else {
                 setOutOfStockArray(outOfStock);
                 setOrderError(true);
+                setShowSpinner(false);
+                setOrderFinished(true);
             }
         }).catch(()=>{
             history.push({
                 pathname: '/error',
                 state: { 
                     title: '¡Ups! Ocurrio un problema al generar la orden',
-                    message: 'La compra no fue realizada, estamos solucionandolo.'
+                    message: 'La compra no fue realizada, estamos solucionandolo.',
+                    light: true
                 }
             });
         })
-        .finally(() => {
-            setShowSpinner(false);
-            setOrderFinished(true);
-        });
     }
    
     return (
@@ -134,8 +139,8 @@ export const Order = props => {
                         showForm ? <BuyerForm addOrder={addOrderAndUpdateStock} /> : <></>
                     }
                     { //Mensajes de exito o error de compra
-                        (orderFinished && orderError ) ? <Error title={'Hay productos sin stock'} message={'Remove los productos sin el stock pedido:'}>
-                            <ul>
+                        (orderFinished && orderError ) ? <Error title={'Hay productos sin stock'} message={'Remove los productos sin el stock pedido:'} light={false}>
+                            <ul className={classes.lista}>
                                 {
                                     outOfStockArray.map((element, i) =>{
                                         return (
@@ -146,10 +151,39 @@ export const Order = props => {
                             </ul>
                         </Error> : (orderFinished && !orderError) ? <>
                             <h1>Compra realizada!</h1>
-                            <h2>Id de tu compra: {orderId}</h2>   
+                            <h2>Id de tu compra: {orderId}</h2>
+                            <Button className={classes.pagarButton + " scale-in-hor-left"}  onClick={handleCloseOrder}>
+                                Continuar
+                            </Button>
                         </> : <></>
                     }
             </Modal>
         </>
     );
 }
+
+/*
+const p1 = new Promise((res, rej) => {
+            console.log("Promesa 1 | getProductos control de stock");
+            setTimeout(() => {
+                res(3);
+            }, 3000);
+        });
+        
+        const p2 = new Promise((res, rej) => {
+            console.log("Promesa 2 | Commit batch y agregar compra.")
+            setTimeout(() => {
+                res("hdtghd4afg79");
+            }, 3000);
+        });
+
+p1.then((n) => {
+            const newOrder = generateOrder(buyer);
+            p2.then((newID) => {  
+                addOrderId(newID);
+                setShowSpinner(false);
+                setOrderFinished(true);
+                console.log("- Id agregado -");
+            });
+        });
+*/

@@ -31,7 +31,8 @@ export const ItemListContainer = () => {
                 pathname: '/error',
                 state: { 
                     title: '¡Ups! Ocurrio un problema al mostrar los productos',
-                    message: 'Los productos no estan disponibles en este momento, estamos solucionandolo.'
+                    message: 'Los productos no estan disponibles en este momento, estamos solucionandolo.',
+                    light: true
                 }
             });
         }).finally(() => {
