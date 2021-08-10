@@ -85,8 +85,7 @@ export const CartComponentContext = props => {
      * @returns La cantidad total (number)
      */
     const getTotalQuantity = () => {
-        const cantidadTotal = itemsCompraArray.map((itemCompra) => { return itemCompra.quantity})
-                              .reduce((acc, curr) => acc + curr, 0);
+        const cantidadTotal = itemsCompraArray.reduce((acc, curr) => acc + curr.quantity, 0);
         return cantidadTotal;
     }
 
@@ -95,8 +94,7 @@ export const CartComponentContext = props => {
      * @returns El precio total (number)
      */
     const getTotalPrice = () => {
-        const totalPrice = itemsCompraArray.map((itemCompra) => { return itemCompra.quantity * itemCompra.item.precio})
-                            .reduce((acc,curr) => acc + curr, 0);
+        const totalPrice = itemsCompraArray.reduce((acc,curr) => acc + (curr.item.precio * curr.quantity), 0);
         return totalPrice;
     }
 
